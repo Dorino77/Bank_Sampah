@@ -35,7 +35,7 @@
                 pengolahan yang baik, kita dapat mengurangi pencemaran lingkungan, mendaur ulang limbah menjadi barang
                 bernilai.</p>
             <div class="btn-group">
-                <button class="register-btn" onclick="window.location.href='{{ route('register') }}'">Register</button>
+                <button class="register-btn" onclick="window.location.href='{{ route('register') }}'">Daftar</button>
             </div>
 
             <!-- Login Form Container -->
