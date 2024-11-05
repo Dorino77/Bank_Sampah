@@ -1,0 +1,108 @@
+/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Arial", sans-serif;
+}
+
+body,
+html {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: url("/images/bgregister.png") no-repeat center center/cover;
+}
+
+.register-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+    background-color: rgba(30, 255, 0, 0.7);
+    padding: 20px;
+}
+
+.form-box {
+    background-color: white;
+    padding: 15px 25px; /* Reduced padding */
+    border-radius: 15px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    width: 400px; /* Reduced width */
+    max-width: 90%;
+}
+
+.form-box .logo {
+    width: 100px; /* Reduced logo size */
+    margin-bottom: 8px;
+}
+
+.form-box h2 {
+    font-size: 28px; /* Reduced font size */
+    margin-bottom: 15px;
+    color: #003f15;
+}
+
+.input-group {
+    margin-bottom: 15px; /* Reduced margin */
+    text-align: left;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px; /* Reduced font size */
+    font-weight: bold;
+    color: #333;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px 15px; /* Reduced padding */
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    font-size: 14px; /* Reduced font size */
+    transition: border-color 0.3s;
+}
+
+.input-group input:focus {
+    border-color: #82ba65;
+    outline: none;
+}
+
+.submit-btn {
+    background-color: #82ba65;
+    color: white;
+    padding: 12px 25px; /* Reduced padding */
+    font-size: 16px; /* Reduced font size */
+    font-weight: bold;
+    border: none;
+    border-radius: 20px; /* Reduced border radius */
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    width: 100%;
+    margin-top: 15px;
+}
+
+.submit-btn:hover {
+    background-color: #bd8a00;
+    transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+    .form-box {
+        width: 90%;
+        padding: 20px; /* Adjust padding for smaller screens */
+    }
+
+    .submit-btn {
+        font-size: 14px;
+    }
+
+    .form-box .logo {
+        width: 100px; /* Further reduced logo size for small screens */
+    }
+}
