@@ -45,7 +45,7 @@ nav ul li a {
 }
 
 .home {
-    background: url("../images/backgroundhome2.jpg") no-repeat center
+    background: url("../images/backgroundhome.jpg") no-repeat center
         center/cover;
     height: 100vh;
     position: relative;

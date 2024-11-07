@@ -12,7 +12,7 @@
     <!-- Header Section -->
     <header>
         <div class="logo">
-        <img src="/images/logo1.png" alt="Logo">
+            <img src="/images/logo1.png" alt="Logo">
 
         </div>
         <nav>
@@ -95,7 +95,7 @@
 
     <!-- About Section -->
     <section class="about" id="about">
-    <div class="about-bg"></div>
+        <div class="about-bg"></div>
         <div class="container">
             <h2>Tentang Bank Sampah Gedangsewu</h2>
             <p>
@@ -128,10 +128,30 @@
     </section>
 
     @if (session('message'))
-    <div class="alert alert-success">
-        {{ session('message') }}
-    </div>
-@endif
+        <div class="alert alert-success">
+            {{ session('message') }}
+        </div>
+    @endif
+    <script>
+        const backgrounds = [
+            "../images/backgroundhome.jpg",
+            "../images/backgroundhome1.jpg",
+            "../images/backgroundhome2.jpg",
+            "../images/backgroundhome3.jpg",
+            "../images/backgroundhome4.jpg"
+        ];
+        let currentIndex = 0;
+
+        function changeBackground() {
+            const homeSection = document.querySelector('.home');
+            currentIndex = (currentIndex + 1) % backgrounds.length;
+            homeSection.style.backgroundImage = `url('${backgrounds[currentIndex]}')`;
+        }
+
+        // Set interval untuk mengganti gambar setiap 5 detik
+        setInterval(changeBackground, 5000);
+    </script>
+
 
 </body>
 
