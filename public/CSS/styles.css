@@ -110,7 +110,7 @@ nav ul li a {
 }
 
 .register-btn {
-    background-color: #82ba65;
+    background-color: #003f15;
     color: white;
 }
 
@@ -121,11 +121,12 @@ nav ul li a {
 .login-box {
     position: absolute;
     top: 50%;
-    right: 1%;
+    right: 10%;
     transform: translateY(-50%);
     background-color: rgba(255, 255, 255, 0.9);
-    padding: 40px;
-    padding-right: 5%;
+    padding: 4%;
+    padding-right: 4%;
+    padding-top: 2%;
     border-radius: 15px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     width: 350px;
@@ -134,9 +135,10 @@ nav ul li a {
 
 .login-box h2 {
     text-align: center;
-    font-size: 32px;
-    margin-bottom: 20px;
+    font-size: 42px;
+    margin-bottom: 60px;
     color: #003f15;
+    font-family: 'Times New Roman', Times, serif;
 }
 
 .login-box .input-group {
@@ -160,9 +162,9 @@ nav ul li a {
 
 .login-box .submit-btn {
     width: 100%;
-    padding: 12px;
+    padding: 15px;
     border: none;
-    border-radius: 5px;
+    border-radius: 15px;
     background-color: #003f15;
     color: white;
     font-size: 18px;
