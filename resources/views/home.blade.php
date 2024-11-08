@@ -5,15 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bank Sampah Gedangsewu</title>
-    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="\CSS\styles.css">
 </head>
 
 <body>
     <!-- Header Section -->
     <header>
         <div class="logo">
-        <img src="/images/logo1.png" alt="Logo">
-
+            <img src="images/logo1.png" alt="Bank Sampah Gedangsewu">
         </div>
         <nav>
             <ul>
@@ -35,7 +34,7 @@
                 pengolahan yang baik, kita dapat mengurangi pencemaran lingkungan, mendaur ulang limbah menjadi barang
                 bernilai.</p>
             <div class="btn-group">
-                <button class="register-btn" onclick="window.location.href='{{ route('register') }}'">Daftar</button>
+                <button class="register-btn" onclick="window.location.href='register.php'">Register</button>
             </div>
 
             <!-- Login Form Container -->
@@ -60,7 +59,7 @@
     <!-- Program Section -->
     <section class="program">
         <div class="container">
-            <img src="/images/program.png" alt="Program Bank Sampah" class="program-img">
+            <img src="images/program.png" alt="Program Bank Sampah" class="program-img">
         </div>
     </section>
 
@@ -86,8 +85,8 @@
                 </div>
                 <!-- Posters Column -->
                 <div class="posters">
-                    <img src="/images/poster1.jpg" alt="Edukasi Poster 1" class="poster">
-                    <img src="/images/poster2.jpg" alt="Edukasi Poster 2" class="poster">
+                    <img src="images/poster1.jpg" alt="Edukasi Poster 1" class="poster">
+                    <img src="images/poster2.jpg" alt="Edukasi Poster 2" class="poster">
                 </div>
             </div>
         </div>
@@ -95,7 +94,6 @@
 
     <!-- About Section -->
     <section class="about" id="about">
-    <div class="about-bg"></div>
         <div class="container">
             <h2>Tentang Bank Sampah Gedangsewu</h2>
             <p>
@@ -108,30 +106,25 @@
             <h3>Kontak Kami:</h3>
             <div class="contact-info">
                 <div class="contact-item">
-                    <img src="/images/iconhp.png" alt="Telepon">
+                    <img src="images/iconhp.png" alt="Telepon">
                     <span>Telepon: 081217348230</span>
                 </div>
                 <div class="contact-item">
-                    <img src="/images/iconemail.png" alt="Email">
-                    <span>Email: banksampahgsewu77@gmail.com</span>
+                    <img src="images/iconemail.png" alt="Email">
+                    <span>Email: banksampahgsewu@gmail.com</span>
                 </div>
                 <div class="contact-item">
-                    <img src="/images/iconweb.png" alt="Website">
+                    <img src="images/iconweb.png" alt="Website">
                     <span>Website: banksampahgedangsewu.com</span>
                 </div>
                 <div class="contact-item">
-                    <img src="/images/iconalamat.png" alt="Alamat">
+                    <img src="images/iconalamat.png" alt="Alamat">
                     <span>Alamat: Gedangsewu, Tulungagung, Jawa Timur</span>
                 </div>
             </div>
         </div>
     </section>
 
-    @if (session('message'))
-    <div class="alert alert-success">
-        {{ session('message') }}
-    </div>
-@endif
 
 </body>
 

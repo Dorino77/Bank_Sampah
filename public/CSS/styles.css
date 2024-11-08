@@ -33,8 +33,7 @@ nav ul {
     list-style: none;
     display: flex;
     gap: 30px;
-    margin-right: 5%;
-    padding-right: 20px;
+    margin-right: auto;
 }
 
 nav ul li a {
@@ -44,13 +43,14 @@ nav ul li a {
     font-size: 24px;
 }
 
+
 .home {
-    background: url("../images/backgroundhome2.jpg") no-repeat center
-        center/cover;
+    background: url("../images/backgroundhome1.jpg") no-repeat center center/cover;
     height: 100vh;
     position: relative;
     transition: background-image 1s ease-in-out;
 }
+
 
 .home .container {
     display: flex;
@@ -63,6 +63,7 @@ nav ul li a {
     position: relative;
     z-index: 2;
     color: white;
+
 }
 
 .home h3 {
@@ -121,11 +122,10 @@ nav ul li a {
 .login-box {
     position: absolute;
     top: 50%;
-    right: 1%;
+    right: 10%;
     transform: translateY(-50%);
     background-color: rgba(255, 255, 255, 0.9);
     padding: 40px;
-    padding-right: 5%;
     border-radius: 15px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     width: 350px;
@@ -329,7 +329,7 @@ nav ul li a {
 }
 
 .about-bg {
-    background: url("/images/backgroundhome1.jpg") no-repeat center center/cover; /* Change to your desired background image */
+    background: url(/images/about-background.jpg) no-repeat center center/cover; /* Change to your desired background image */
     position: absolute;
     top: 0;
     left: 0;
