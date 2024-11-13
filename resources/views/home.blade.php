@@ -34,25 +34,32 @@
                 pengolahan yang baik, kita dapat mengurangi pencemaran lingkungan, mendaur ulang limbah menjadi barang
                 bernilai.</p>
             <div class="btn-group">
-                <button class="register-btn" onclick="window.location.href='register.php'">Register</button>
+                <button class="register-btn" onclick="window.location.href='{{ route('register') }}'">Daftar</button>
             </div>
 
-            <!-- Login Form Container -->
-            <div class="login-box">
-                <h2>LOGIN</h2>
-                <form action="login.php" method="POST">
-                    <div class="input-group">
-                        <label for="name">Name</label>
-                        <input type="text" id="name" name="name" placeholder="Name" required>
-                    </div>
-                    <div class="input-group">
-                        <label for="password">Password</label>
-                        <input type="password" id="password" name="password" placeholder="Password" required>
-                    </div>
-                    <button type="submit" class="submit-btn">Log in</button>
-                </form>
+        <!-- Login Form Container -->
+        <div class="login-box">
+            <h2>LOGIN</h2>
+            <form action="/login" method="POST">
+                @csrf
+                <div class="input-group">
+                    <label for="telepon">Telepon</label>
+                    <input type="telepon" id="telepon" name="telepon" placeholder="Telepon" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Password" required>
+                </div>
+                <button type="submit" class="submit-btn">Log in</button>
+                @if(session('error'))
+                <div class="error-message">
+                    {{ session('error') }}</div>
+            @endif
+            </form>
+        </div>
+            
 
-            </div>
+
         </div>
     </section>
 
