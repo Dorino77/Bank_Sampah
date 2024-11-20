@@ -88,9 +88,14 @@ class AuthController extends Controller
     }
 
     // Handle logout
-    public function logout()
-    {
-        Auth::logout();
-        return redirect()->route('login');
-    }
+    public function logout(Request $request)
+{
+    Auth::logout();
+
+    // Hapus semua sesi
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+
+    return redirect()->route('login')->with('message', 'Anda telah berhasil logout.');
+}
 }
