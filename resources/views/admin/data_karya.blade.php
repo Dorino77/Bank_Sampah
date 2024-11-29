@@ -242,7 +242,6 @@
         </a>
         <div class="profile-container">
             <div class="profile-details">
-                <span class="customer-name">Administrator</span>
                 <span class="customer-role">Administrator</span>
             </div>
         </div>
@@ -251,11 +250,11 @@
         <ul>
             <li><a href="{{ route('admin.index') }}">Dashboard</a></li>
             <li><a href="{{ route('admin.pengambilan_sampah') }}">Req Pengambilan Sampah</a></li>
-            <li><a href="#">Data Sampah</a></li>
-            <li><a href="#">Pembelian Sampah</a></li>
+            <li><a href="datasampah.html">Data Sampah</a></li>
+            <li><a href="{{ route('admin.beli_sampah') }}">Pembelian Sampah</a></li>
             <li><a href="{{ route('admin.data_karya') }}">Data Hasil Karya</a></li>
-            <li><a href="#">Pembelian Hasil Karya</a></li>
-            <li><a href="#">Keuangan</a></li>
+            <li><a href="{{ route('admin.transaksi_karya') }}">Pembelian Hasil Karya</a></li>
+            <li><a href="...">Keuangan</a></li>
             <li>
                 <form action="{{ route('logout') }}" method="POST" style="display: inline;">
                     @csrf

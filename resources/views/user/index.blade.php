@@ -16,7 +16,7 @@
         </a>
         <div class="profile-container">
             <div class="profile-details">
-                <span class="customer-name">Selamat Datang {{ $loggedInUser->name }}</span>
+                <span class="customer-name">Selamat Datang, {{ $loggedInUser->name }}</span>
                 <span class="customer-role">Customer</span>
             </div>
         </div>
@@ -31,7 +31,7 @@
             <li>
                 <form action="{{ route('logout') }}" method="POST" style="display: inline;">
                     @csrf
-                    <button type="submit" style="background: none; border: none; color: white; cursor: pointer;">
+                    <button type="submit" style="background: none; border: none; color: white; cursor: pointer; font-size: 16px; font-weight: bold;">
                         Logout
                     </button>
                 </form>

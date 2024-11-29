@@ -101,104 +101,34 @@
             background-color: #ffbb00;
         }
 
-        /* Main Content */
-        .main-content {
-            padding: 40px 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-            background: linear-gradient(135deg, #2e7d32, #66bb6a);
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        /* Table Container */
+        .table-container {
+            width: 80%;
+            margin: auto;
+            margin-top: 20px;
         }
 
-        .welcome-section {
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        table th, table td {
+            padding: 10px;
+            border: 1px solid #ddd;
             text-align: center;
         }
 
-        .welcome-section h1 {
+        thead tr {
+            background-color: #4CAF50;
             color: white;
-            font-size: 2rem;
-            margin-bottom: 10px;
         }
 
-        .welcome-section p {
-            font-size: 1rem;
-            color: #ffffff;
+        tbody tr {
+            background-color: #f9f9f9;
         }
 
-        /* Stats Section */
-        .stats-section {
-            display: flex;
-            gap: 20px;
-            margin-top: 40px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .stat-box {
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            text-align: center;
-            width: 200px;
-            transition: transform 0.5s;
-            position: relative;
-        }
-
-        .stat-box:hover {
-            transform: scale(1.05);
-        }
-
-        .stat-box img {
-            width: 40px;
-            height: 40px;
-            margin-bottom: 10px;
-        }
-
-        .stat-box h2 {
-            font-size: 1.5rem;
-            margin: 0;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
-            /* Adding shadow */
-        }
-
-        .stat-value {
-            font-size: 2rem;
-            font-weight: bold;
-            margin: 10px 0;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
-            /* Adding shadow */
-        }
-
-        .stat-box p {
-            font-size: 1.5rem;
-            opacity: 0.9;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
-            /* Adding shadow */
-        }
-
-
-        /* Specific Colors for Each Box */
-        .box-1 {
-            background: linear-gradient(135deg, #4caf50, #81c784);
-            /* Green Gradient */
-        }
-
-        .box-2 {
-            background: linear-gradient(135deg, #42a5f5, #64b5f6);
-            /* Blue Gradient */
-        }
-
-        .box-3 {
-            background: linear-gradient(135deg, #ffb74d, #ffcc80);
-            /* Orange Gradient */
-        }
-
-        .box-4 {
-            background: linear-gradient(135deg, #ba68c8, #ce93d8);
-            /* Purple Gradient */
-        }
     </style>
 </head>
 
@@ -232,40 +162,28 @@
             </li>
         </ul>
     </nav>
-    <main class="main-content">
-        <section class="welcome-section">
-            <h1>Bank Sampah Gedangsewu</h1>
-            <p>Gunakan menu di atas untuk menjelajahi fitur-fitur yang tersedia.</p>
-        </section>
-    </main>
-
-    <!-- Monitoring Section -->
-    <section class="stats-section">
-        <div class="stat-box box-1">
-            <img src="/images/admin/customer.png" alt="Registered Customers Icon">
-            <h2>Jumlah Customer</h2>
-            <p class="stat-value">{{ $custCount }}</p>
-            <p>Customers</p>
-        </div>
-        <div class="stat-box box-2">
-            <img src="/images/admin/order.png" alt="Incoming Orders Icon">
-            <h2>Order Yang Berlangsung</h2>
-            <p class="stat-value">0</p>
-            <p>Order</p>
-        </div>
-        <div class="stat-box box-3">
-            <img src="/images/admin/karya.png" alt="Creations Icon">
-            <h2>Hasil Karya</h2>
-            <p class="stat-value">{{ $karyaCount }}</p>
-            <p>Items</p>
-        </div>
-        <div class="stat-box box-4">
-            <img src="/images/admin/coin.png" alt="Customer Points Icon">
-            <h2>Customer Points</h2>
-            <p class="stat-value">0</p>
-            <p>Points</p>
-        </div>
-    </section>
+    <h2 style="text-align: center; margin-top: 50px; font-size: 2.2rem;">Daftar Transaksi dengan Nama Karya</h2>
+    
+    <div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                {{-- <th>Nama</th> --}}
+                <th>Nama Karya</th>
+                <th>Total Harga</th>
+                <th>Tanggal</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($transaksi as $item)
+                <tr>
+                    {{-- <td>{{ $item->user_name }}</td> --}}
+                    <td>{{ $item->namaKarya }}</td>
+                    <td>{{ number_format($item->total_harga, 2) }}</td>
+                    <td>{{ $item->tanggal }}</td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
 </body>
-
 </html>

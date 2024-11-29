@@ -178,6 +178,16 @@
         .submit-btn:active {
             transform: scale(0.98);
         }
+
+        .success {
+            color: green;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        .error {
+            color: red;
+            font-size: 14px;
+        }
     </style>
 </head>
 
@@ -187,9 +197,8 @@
             <img src="/images/logo1.png" alt="Logo Bank Sampah" class="logo">
         </div>
         <div class="profile-container">
-            <img src="profile-pic.png" alt="Foto Profil" class="profile-pic">
             <div class="profile-details">
-                <span class="customer-name">Selamat Datang {{ $loggedInUser->name }}</span>
+                <span class="customer-name">Selamat Datang, {{ $loggedInUser->name }}</span>
                 <span class="customer-role">Customer</span>
             </div>
         </div>
@@ -202,31 +211,84 @@
             <li><a href="{{ route('customer.hasil_karya') }}">Hasil Karya</a></li>
             {{-- <li><a href="{{ route('customer.') }}">Aktivitas</a></li>
             <li><a href="{{ route('customer.') }}">Poin</a></li> --}}
-            <li><a href="#">Logout</a></li>
+                <li>
+                    <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                        @csrf
+                        <button type="submit" style="background: none; border: none; color: white; cursor: pointer; font-size: 16px; font-weight: bold;">
+                            Logout
+                        </button>
+                    </form>
+                </li>
         </ul>
     </nav>
 
     <section class="request-form">
         <h2>Request Penjualan Sampah</h2>
-        <p>Silakan isi formulir di bawah ini dengan data yang benar untuk permintaan penjualan sampah Anda.</p>
-        <form action="submit_request.php" method="POST">
-            <label for="name">Nama:</label>
-            <input type="text" id="name" name="name" required>
+        <p>Silakan isi formulir di bawah ini dengan data yang benar untuk permintaan penjualan sampah Anda, yang akan dilayani pukul 09:00 - 12:00 WIB.</p>
 
-            <label for="address">Alamat:</label>
-            <input type="text" id="address" name="address" required>
+        <!-- Pesan sukses -->
+        @if (session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
 
-            <label for="phone">Nomor HP:</label>
-            <input type="tel" id="phone" name="phone" required>
+        <!-- Pesan error -->
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
-            <label for="deskripsi">Deskripsi Sampah:</label>
-            <input type="text" id="deskripsi" name="deskripsi" required>
+        <form action="{{ route('customer.requestSampah') }}" method="POST">
+            @csrf 
 
-            <label for="pickup_time">Jam Pengambilan:</label>
-            <input type="time" id="pickup_time" name="pickup_time" min="09:00" max="16:00" required>
-
+            <label for="nama">Nama:</label><br>
+            <input type="text" id="nama" autocomplete="off" name="nama" value="{{ old('nama') }}" required>
+            @error('nama') <p class="error">{{ $message }}</p> @enderror
+            <br><br>
+    
+            <label for="alamat">Alamat:</label><br>
+            <input type="text" id="alamat" name="alamat" value="{{ old('alamat') }}" required>
+            @error('alamat') <p class="error">{{ $message }}</p> @enderror
+            <br><br>
+    
+            <label for="nomor_hp">Nomor HP:</label><br>
+            <input type="tel" id="nomor_hp" name="nomor_hp" value="{{ old('nomor_hp') }}" required>
+            @error('nomor_hp') <p class="error">{{ $message }}</p> @enderror
+            <br><br>
+    
+            <label for="deskripsi_sampah">Deskripsi Sampah:</label><br>
+            <input type="text" id="deskripsi_sampah" name="deskripsi_sampah" value="{{ old('deskripsi_sampah') }}" required>
+            @error('deskripsi_sampah') <p class="error">{{ $message }}</p> @enderror
+            <br><br>
+    
+            <label for="jam_pengambilan">Jam Pengambilan (09:00 - 12:00 AM):</label><br>
+    <input type="time" id="jam_pengambilan" name="jam_pengambilan" value="{{ old('jam_pengambilan') }}" min="09:00" max="12:00" required>
+    @error('jam_pengambilan') <p class="error">{{ $message }}</p> @enderror
+    <br><br>
+    
             <button type="submit" class="submit-btn">Kirim Request</button>
         </form>
+            <!-- Pesan sukses -->
+            @if (session('success'))
+            <p class="success">{{ session('success') }}</p>
+        @endif
+
+        <!-- Pesan error -->
+        @if ($errors->any())
+            <div class="error">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
     </section>
 </body>
 
