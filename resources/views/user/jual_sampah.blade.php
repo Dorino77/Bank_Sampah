@@ -199,7 +199,9 @@
         <div class="profile-container">
             <div class="profile-details">
                 <span class="customer-name">Selamat Datang, {{ $loggedInUser->name }}</span>
-                <span class="customer-role">Customer</span>
+                <span class="customer-role" style="font-size: 18px; font-weight: bold; color: #4CAF50; background-color: #e8f5e9; padding: 5px 10px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                    Poin: {{ $totalPoin }}
+                </span>
             </div>
         </div>
     </header>
@@ -246,34 +248,35 @@
 
         <form action="{{ route('customer.requestSampah') }}" method="POST">
             @csrf 
-
+        
             <label for="nama">Nama:</label><br>
-            <input type="text" id="nama" autocomplete="off" name="nama" value="{{ old('nama') }}" required>
+            <input type="text" id="nama" autocomplete="off" name="nama" value="{{ old('nama', Auth::user()->name) }}" required>
             @error('nama') <p class="error">{{ $message }}</p> @enderror
             <br><br>
-    
+        
             <label for="alamat">Alamat:</label><br>
             <input type="text" id="alamat" name="alamat" value="{{ old('alamat') }}" required>
             @error('alamat') <p class="error">{{ $message }}</p> @enderror
             <br><br>
-    
+        
             <label for="nomor_hp">Nomor HP:</label><br>
-            <input type="tel" id="nomor_hp" name="nomor_hp" value="{{ old('nomor_hp') }}" required>
+            <input type="tel" id="nomor_hp" name="nomor_hp" value="{{ old('nomor_hp', Auth::user()->telepon) }}" readonly>
             @error('nomor_hp') <p class="error">{{ $message }}</p> @enderror
             <br><br>
-    
+        
             <label for="deskripsi_sampah">Deskripsi Sampah:</label><br>
             <input type="text" id="deskripsi_sampah" name="deskripsi_sampah" value="{{ old('deskripsi_sampah') }}" required>
             @error('deskripsi_sampah') <p class="error">{{ $message }}</p> @enderror
             <br><br>
-    
+        
             <label for="jam_pengambilan">Jam Pengambilan (09:00 - 12:00 AM):</label><br>
-    <input type="time" id="jam_pengambilan" name="jam_pengambilan" value="{{ old('jam_pengambilan') }}" min="09:00" max="12:00" required>
-    @error('jam_pengambilan') <p class="error">{{ $message }}</p> @enderror
-    <br><br>
-    
+            <input type="time" id="jam_pengambilan" name="jam_pengambilan" value="{{ old('jam_pengambilan') }}" min="09:00" max="12:00" required>
+            @error('jam_pengambilan') <p class="error">{{ $message }}</p> @enderror
+            <br><br>
+        
             <button type="submit" class="submit-btn">Kirim Request</button>
         </form>
+        
             <!-- Pesan sukses -->
             @if (session('success'))
             <p class="success">{{ session('success') }}</p>

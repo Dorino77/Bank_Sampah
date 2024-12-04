@@ -11,11 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sampah', function (Blueprint $table) {
-            $table->id();
-            $table->string('jenis_sampah');
-            $table->decimal('harga_per_kg', 10, 2); // harga per kilogram
-            $table->timestamps();
+        Schema::table('transaksi_sampah', function (Blueprint $table) {
+            $table->integer('poin')->default(0)->after('harga_total');
         });
     }
 
@@ -24,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sampah');
+        Schema::table('transaksi_sampah', function (Blueprint $table) {
+            $table->dropColumn('poin');
+        });
     }
 };

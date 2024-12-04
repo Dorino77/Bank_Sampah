@@ -249,8 +249,8 @@
         </div>
         <div class="stat-box box-2">
             <img src="/images/admin/order.png" alt="Incoming Orders Icon">
-            <h2>Order Yang Berlangsung</h2>
-            <p class="stat-value">0</p>
+            <h2>Order Hasil Karya</h2>
+            <p class="stat-value">{{ $buyCount }}</p>
             <p>Order</p>
         </div>
         <div class="stat-box box-3">
@@ -262,7 +262,7 @@
         <div class="stat-box box-4">
             <img src="/images/admin/coin.png" alt="Customer Points Icon">
             <h2>Customer Points</h2>
-            <p class="stat-value">0</p>
+            <p class="stat-value">{{ $totalPoin }}</p> 
             <p>Points</p>
         </div>
     </section>

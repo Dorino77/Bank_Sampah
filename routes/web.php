@@ -46,6 +46,9 @@ Route::middleware('auth:admin')->group(function () {
     Route::get('/index/admin', [AdminController::class, 'dashboard'])->name('admin.index');    
     Route::get('/pengambilan-sampah', [AdminController::class, 'ambilSampah'])->name('admin.pengambilan_sampah');
     Route::get('/beli-sampah', [AdminController::class, 'beliSampah'])->name('admin.beli_sampah');
+    //
+    Route::get('/transaksi-sampah', [AdminController::class, 'transaksiSampah'])->name('admin.transaksi_sampah');
+    //
     Route::get('/data-karya', [AdminController::class, 'dataKarya'])->name('admin.data_karya');
     Route::get('/form-tambah-karya', [AdminController::class, 'formTambahKarya'])->name('admin.form_tambah_karya');
     Route::post('/admin.form_tambah_karya', [AdminController::class, 'tambahHasilKarya'])->name('admin.tambah_karya');
@@ -56,5 +59,15 @@ Route::middleware('auth:admin')->group(function () {
     Route::delete('/admin/delete_karya/{id}', [AdminController::class, 'deleteKarya'])->name('admin.delete_karya');
     Route::post('/kurangi-stok', [CustomerController::class, 'kurangiStok'])->name('kurangi.stok');
     Route::get('/admin/transaksi-karya', [AdminController::class, 'transaksiWithKarya'])->name('admin.transaksi_karya');
+    
+
+
+
+    Route::get('/admin/transaksi-sampah', [AdminController::class, 'transaksiSampah'])->name('admin.transaksi_sampah');
+    Route::post('/admin/transaksi-sampah', [AdminController::class, 'transaksiSampahStore']);
+    Route::get('/admin/cek-telepon/{telepon}', [AdminController::class, 'cekTelepon']);
+    Route::get('/admin/get-jenis-sampah', [AdminController::class, 'getJenisSampah']);
+    Route::get('/admin/get-harga-per-kg/{jenisBarang}', [AdminController::class, 'getHargaPerKg']);
+    Route::post('/admin/transaksi-sampah', [AdminController::class, 'transaksiSampahStore'])->name('admin.transaksi_sampah');
 });
 

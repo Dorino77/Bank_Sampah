@@ -162,7 +162,7 @@
             </li>
         </ul>
     </nav>
-    <h2 style="text-align: center; margin-top: 50px; font-size: 2.2rem;">Daftar Transaksi dengan Nama Karya</h2>
+    <h2 style="text-align: center; margin-top: 50px; font-size: 2.2rem;">Daftar Transaksi Hasil Karya</h2>
     
     <div class="table-container">
     <table>
@@ -179,7 +179,7 @@
                 <tr>
                     {{-- <td>{{ $item->user_name }}</td> --}}
                     <td>{{ $item->namaKarya }}</td>
-                    <td>{{ number_format($item->total_harga, 2) }}</td>
+                    <td>Rp.{{ number_format($item->total_harga, 2) }}</td>
                     <td>{{ $item->tanggal }}</td>
                 </tr>
             @endforeach

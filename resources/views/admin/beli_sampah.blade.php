@@ -314,7 +314,7 @@
     </nav>
     <h2 style="text-align: center; margin-top: 50px; font-size: 2.2rem;">Pembelian Sampah</h2>
     <div class="table-container">
-        <button class="add-button" onclick="showModal()">Tambah Pembelian</button>
+      <button class="add-button" onclick="window.location.href='{{ route('admin.transaksi_sampah') }}'">Tambah Pembelian</button>
         <table class="data-table">
           <thead>
             <tr>
@@ -322,334 +322,27 @@
               <th>Nama</th>
               <th>Alamat</th>
               <th>Nomor HP</th>
+              <th>Jenis Barang</th>
+              <th>Berat</th>
               <th>Harga Total (Rp)</th>
-              <th>Poin</th>
-              <th>Aksi</th>
             </tr>
           </thead>
           <tbody>
-            <!-- Tabel data akan diisi secara dinamis -->
+            @foreach ($transaksi_sampah as $item)
+            <tr>
+                <td>{{ $item->created_at }}</td>
+                <td>{{ $item->user_name }}</td>
+                <td>{{ $item->user_alamat }}</td>
+                <td>{{ $item->user_telepon }}</td>
+                <td>{{ $item->jenis_sampah }}</td>
+                <td>{{ $item->berat }} kg</td>
+                <td>Rp.{{ number_format($item->harga_total, 2) }}</td>
+            </tr>
+        @endforeach
           </tbody>
         </table>
       </div>
   
-      <!-- Modal Form -->
-      <div class="modal" id="modalForm">
-        <div class="modal-content">
-          <h3>Formulir Pembelian</h3>
-          <div class="form-group">
-            <label for="nama">Nama:</label>
-            <input type="text" id="nama" placeholder="Masukkan Nama" />
-          </div>
-          <div class="form-group">
-            <label for="nomorHp">Nomor HP:</label>
-            <input type="text" id="nomorHp" placeholder="Masukkan Nomor HP" />
-          </div>
-          <div class="form-group">
-            <label for="alamat">Alamat:</label>
-            <textarea id="alamat" placeholder="Masukkan Alamat"></textarea>
-          </div>
-          <div class="form-group">
-            <label for="jumlahBarang"
-              >Masukkan jumlah jenis barang (maksimal 7):</label
-            >
-            <input
-              type="number"
-              id="jumlahBarang"
-              min="1"
-              max="7"
-              placeholder="Jumlah Jenis Barang"
-              onchange="generateSubForms()"
-            />
-          </div>
-  
-          <div id="subFormsContainer"></div>
-  
-          <div class="form-group">
-            <label for="totalKeseluruhan">Harga Total Keseluruhan (Rp):</label>
-            <input type="number" id="totalKeseluruhan" readonly />
-          </div>
-  
-          <div class="form-buttons">
-            <button class="save-button" onclick="saveData()">Simpan Data</button>
-            <button class="clear-button" onclick="clearForm()">Clear</button>
-            <button class="cancel-button" onclick="closeModal()">Batal</button>
-          </div>
-        </div>
-      </div>
-  
-      <!-- Detail Modal -->
-      <div class="modal" id="detailModal">
-        <div class="detail-modal-content">
-          <button class="close-detail-modal" onclick="closeDetailModal()">
-            &times;
-          </button>
-          <h3>Rincian Pembelian</h3>
-          <p><strong>Tanggal:</strong> <span id="detailTanggal"></span></p>
-          <p><strong>Nama:</strong> <span id="detailNama"></span></p>
-          <p><strong>Nomor HP:</strong> <span id="detailNomorHp"></span></p>
-          <p><strong>Alamat:</strong> <span id="detailAlamat"></span></p>
-          <p>
-            <strong>Harga Total:</strong> Rp <span id="detailTotalHarga"></span>
-          </p>
-          <p><strong>Poin:</strong> <span id="detailPoin"></span></p>
-          <h4>Rincian Barang:</h4>
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>No.</th>
-                <th>Jenis Barang</th>
-                <th>Berat (Kg)</th>
-                <th>Harga/Kg (Rp)</th>
-                <th>Harga Total (Rp)</th>
-              </tr>
-            </thead>
-            <tbody id="detailBarang">
-              <!-- Rincian barang akan diisi secara dinamis -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-  
-      <script>
-        // Array untuk menyimpan data pembelian
-        const pembelianData = [];
-  
-        function showModal() {
-          document.getElementById("modalForm").style.display = "flex";
-        }
-  
-        function closeModal() {
-          document.getElementById("modalForm").style.display = "none";
-        }
-  
-        function generateSubForms() {
-          const container = document.getElementById("subFormsContainer");
-          container.innerHTML = ""; // Hapus semua sub-form sebelumnya
-  
-          const jumlah = parseInt(document.getElementById("jumlahBarang").value);
-          if (isNaN(jumlah) || jumlah < 1) {
-            alert("Masukkan jumlah barang yang valid (minimal 1).");
-            return;
-          }
-  
-          for (let i = 1; i <= jumlah; i++) {
-            const subForm = document.createElement("div");
-            subForm.classList.add("sub-form");
-            subForm.innerHTML = `
-                      <h4>Barang ${i}:</h4>
-                      <div class="form-group">
-                          <label for="jenisBarang${i}">Jenis Barang:</label>
-                          <select id="jenisBarang${i}" onchange="updateHargaTotal(${i})">
-                              <option value="Besi">Besi</option>
-                              <option value="Baja">Baja</option>
-                              <option value="Plastik">Plastik</option>
-                              <option value="Kertas">Kertas</option>
-                              <option value="Seng">Seng</option>
-                              <option value="Koran">Koran</option>
-                              <option value="Kardus">Kardus</option>
-                          </select>
-                      </div>
-                      <div class="form-group">
-                          <label for="berat${i}">Berat (Kg):</label>
-                          <input type="number" id="berat${i}" placeholder="Masukkan Berat" min="0" step="0.01" onchange="updateHargaTotal(${i})">
-                      </div>
-                      <div class="form-group">
-                          <label for="hargaTotal${i}">Harga Total (Rp):</label>
-                          <input type="number" id="hargaTotal${i}" readonly>
-                      </div>
-                  `;
-            container.appendChild(subForm);
-          }
-        }
-  
-        // Update harga total berdasarkan jenis barang dan berat
-        function updateHargaTotal(index) {
-          const jenisBarang = document.getElementById(
-            `jenisBarang${index}`
-          ).value;
-          const berat =
-            parseFloat(document.getElementById(`berat${index}`).value) || 0;
-  
-          const hargaPerKg = {
-            Besi: 8000,
-            Baja: 10000,
-            Plastik: 5000,
-            Kertas: 2000,
-            Seng: 3000,
-            Koran: 2000,
-            Kardus: 2000,
-          };
-  
-          const total = berat * (hargaPerKg[jenisBarang] || 0);
-          document.getElementById(`hargaTotal${index}`).value = total.toFixed(2);
-          calculateGrandTotal();
-        }
-  
-        // Hitung total keseluruhan dari semua barang
-        function calculateGrandTotal() {
-          const jumlah =
-            parseInt(document.getElementById("jumlahBarang").value) || 0;
-          let grandTotal = 0;
-  
-          for (let i = 1; i <= jumlah; i++) {
-            const total =
-              parseFloat(document.getElementById(`hargaTotal${i}`).value) || 0;
-            grandTotal += total;
-          }
-  
-          document.getElementById("totalKeseluruhan").value =
-            grandTotal.toFixed(2);
-        }
-  
-        function clearForm() {
-          document.getElementById("nama").value = "";
-          document.getElementById("nomorHp").value = "";
-          document.getElementById("alamat").value = "";
-          document.getElementById("jumlahBarang").value = "";
-          document.getElementById("subFormsContainer").innerHTML = "";
-          document.getElementById("totalKeseluruhan").value = "";
-        }
-  
-        function saveData() {
-          const nama = document.getElementById("nama").value.trim();
-          const nomorHp = document.getElementById("nomorHp").value.trim();
-          const alamat = document.getElementById("alamat").value.trim();
-          const jumlahBarang = parseInt(
-            document.getElementById("jumlahBarang").value
-          );
-          const totalKeseluruhan =
-            parseFloat(document.getElementById("totalKeseluruhan").value) || 0;
-  
-          if (
-            !nama ||
-            !nomorHp ||
-            !alamat ||
-            !jumlahBarang ||
-            totalKeseluruhan <= 0
-          ) {
-            alert("Harap isi semua kolom dengan benar!");
-            return;
-          }
-  
-          // Mengumpulkan rincian barang
-          const rincianBarang = [];
-          for (let i = 1; i <= jumlahBarang; i++) {
-            const jenis = document.getElementById(`jenisBarang${i}`).value;
-            const berat =
-              parseFloat(document.getElementById(`berat${i}`).value) || 0;
-            const hargaTotal =
-              parseFloat(document.getElementById(`hargaTotal${i}`).value) || 0;
-  
-            if (berat <= 0 || hargaTotal <= 0) {
-              alert(`Harap isi berat untuk Barang ${i} dengan benar!`);
-              return;
-            }
-  
-            rincianBarang.push({
-              jenisBarang: jenis,
-              berat: berat,
-              hargaTotal: hargaTotal,
-            });
-          }
-  
-          // Menghitung poin
-          const poin = Math.floor(totalKeseluruhan / 1000);
-  
-          // Mendapatkan tanggal dan hari saat ini
-          const currentDate = new Date();
-          const options = {
-            weekday: "long",
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-          };
-          const formattedDate = currentDate.toLocaleDateString("id-ID", options);
-  
-          // Menyimpan data ke array
-          const pembelian = {
-            tanggal: formattedDate,
-            nama: nama,
-            nomorHp: nomorHp,
-            alamat: alamat,
-            totalHarga: totalKeseluruhan.toFixed(2),
-            poin: poin,
-            rincianBarang: rincianBarang,
-          };
-  
-          pembelianData.push(pembelian);
-  
-          // Menambahkan baris ke tabel
-          const tableBody = document.querySelector(".data-table tbody");
-          const row = document.createElement("tr");
-  
-          row.innerHTML = `
-                  <td>${pembelian.tanggal}</td>
-                  <td>${pembelian.nama}</td>
-                  <td>${pembelian.alamat}</td>
-                  <td>${pembelian.nomorHp}</td>
-                  <td>${pembelian.totalHarga}</td>
-                  <td>${pembelian.poin}</td>
-                  <td>
-                      <button class="lihat-button" onclick="showDetails(${
-                        pembelianData.length - 1
-                      })">Lihat</button>
-                  </td>
-              `;
-  
-          tableBody.appendChild(row);
-  
-          // Menutup modal dan membersihkan form
-          closeModal();
-          clearForm();
-  
-          alert("Data berhasil disimpan dan ditampilkan di tabel.");
-        }
-  
-        function showDetails(index) {
-          const pembelian = pembelianData[index];
-  
-          document.getElementById("detailTanggal").innerText = pembelian.tanggal;
-          document.getElementById("detailNama").innerText = pembelian.nama;
-          document.getElementById("detailNomorHp").innerText = pembelian.nomorHp;
-          document.getElementById("detailAlamat").innerText = pembelian.alamat;
-          document.getElementById("detailTotalHarga").innerText =
-            pembelian.totalHarga;
-          document.getElementById("detailPoin").innerText = pembelian.poin;
-  
-          const detailBarang = document.getElementById("detailBarang");
-          detailBarang.innerHTML = ""; // Clear previous details
-  
-          pembelian.rincianBarang.forEach((barang, idx) => {
-            const row = document.createElement("tr");
-            row.innerHTML = `
-                      <td>${idx + 1}</td>
-                      <td>${barang.jenisBarang}</td>
-                      <td>${barang.berat}</td>
-                      <td>${(barang.hargaTotal / barang.berat).toFixed(2)}</td>
-                      <td>${barang.hargaTotal.toFixed(2)}</td>
-                  `;
-            detailBarang.appendChild(row);
-          });
-  
-          document.getElementById("detailModal").style.display = "flex";
-        }
-  
-        function closeDetailModal() {
-          document.getElementById("detailModal").style.display = "none";
-        }
-  
-        // Menutup modal saat klik di luar konten modal
-        window.onclick = function (event) {
-          const modal = document.getElementById("modalForm");
-          const detailModal = document.getElementById("detailModal");
-          if (event.target == modal) {
-            modal.style.display = "none";
-          }
-          if (event.target == detailModal) {
-            detailModal.style.display = "none";
-          }
-        };
-      </script>
+      
     </body>
   </html>

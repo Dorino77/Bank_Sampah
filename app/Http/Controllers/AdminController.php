@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\DB;
-
+use App\Models\Poin;
 use App\Models\User;
+use App\Models\Sampah;
 use App\Models\HasilKarya;
 use Illuminate\Http\Request;
+use App\Models\TransaksiSampah;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use Intervention\Image\Facades\Image;
 use App\Models\RequestPenjualanSampah;
 
 class AdminController extends Controller
@@ -16,15 +17,22 @@ class AdminController extends Controller
     public function dashboard()
 {
     $karyaCount = HasilKarya::all()->count(); // Hitung jumlah Karya
+    $buyCount = TransaksiSampah::all()->count(); // Hitung semua transaksi
     $custCount = User::all()->count(); // Hitung jumlah customer
     $loggedInUser = Auth::user(); // Ambil data user yang login
+
+    // Hitung jumlah poin total
+    $totalPoin = Poin::sum('jumlahPoin'); // Ganti 'jumlah_poin' dengan nama kolom yang sesuai pada tabel poin
+
     return view('admin.index', [
         'karyaCount' => $karyaCount,
+        'buyCount' => $buyCount,
         'custCount' => $custCount,
-        'loggedInUser' => $loggedInUser // Kirim data user ke view
-
+        'loggedInUser' => $loggedInUser, // Kirim data user ke view
+        'totalPoin' => $totalPoin, // Kirim total poin ke view
     ]);
 }
+
 
     public function ambilSampah()
     {
@@ -37,8 +45,27 @@ class AdminController extends Controller
     }
     public function beliSampah()
     {
+        $transaksi_sampah = DB::table('transaksi_sampah')
+        ->join('sampah', 'transaksi_sampah.sampah_id', '=', 'sampah.id')
+        ->join('users', 'transaksi_sampah.user_id', '=', 'users.id')
+        ->select(
+            'transaksi_sampah.id as transaksi_id',
+            'users.name as user_name', // Ambil nama user dari tabel users
+            'users.alamat as user_alamat', // Ambil nama user dari tabel users
+            'users.telepon as user_telepon', // Ambil nama user dari tabel users
+            'sampah.jenis_sampah as jenis_sampah',
+            'transaksi_sampah.berat',
+            'transaksi_sampah.harga_total',
+            'transaksi_sampah.created_at'
+        )
+        ->get();
         
-        return view('admin.beli_sampah');
+        return view('admin.beli_sampah', compact('transaksi_sampah'));
+    }
+
+    public function transaksiSampah()
+    {
+        return view('admin.transaksi_sampah');
     }
     public function dataKarya()
     {
@@ -134,9 +161,107 @@ class AdminController extends Controller
 }
 
 
+//====================================================//
 
+
+public function getJenisSampah()
+{
+    $jenisSampah = Sampah::select('id', 'jenis_sampah')->get();
+    return response()->json($jenisSampah);
+}
+
+/**
+ * Mendapatkan harga per kilogram berdasarkan jenis sampah yang dipilih
+ * Digunakan untuk menghitung harga total berdasarkan berat
+ */
+public function getHargaPerKg($jenisBarang)
+{
+    // Mencari harga berdasarkan id jenis barang
+    $sampah = Sampah::find($jenisBarang);
+    
+    if ($sampah) {
+        return response()->json(['harga_per_kg' => $sampah->harga_per_kg]);
+    }
+    
+    return response()->json(['error' => 'Jenis sampah tidak ditemukan'], 404);
+}
+
+/**
+ * Proses transaksi sampah
+ * Memverifikasi telepon pengguna dan menghitung harga total berdasarkan barang yang dimasukkan
+ */
+public function transaksiSampahStore(Request $request)
+{
+    $request->validate([
+        'telepon' => 'required',
+        'jenis_barang' => 'required|array',
+        'jenis_barang.*' => 'required|exists:sampah,id',
+        'berat' => 'required|array',
+        'berat.*' => 'required|numeric|min:0.1',
+        'harga_total' => 'required|array',
+        'harga_total.*' => 'required|numeric|min:0',
+    ]);
+
+    $telepon = $request->input('telepon');
+    $user = User::where('telepon', $telepon)->first();
+
+    if (!$user) {
+        return redirect()->back()->withErrors(['telepon' => 'Nomor telepon tidak terdaftar.']);
+    }
+
+    $totalHarga = 0;
+    $totalPoin = 0;
+
+    foreach ($request->jenis_barang as $key => $jenisBarang) {
+        $sampah = Sampah::find($jenisBarang);
+        if (!$sampah) {
+            continue;
+        }
+
+        $berat = $request->berat[$key];
+        $hargaTotal = $berat * $sampah->harga_per_kg;
+        $poin = floor($hargaTotal / 1000); // Hitung poin berdasarkan harga total
+
+        $totalHarga += $hargaTotal;
+        $totalPoin += $poin;
+
+        TransaksiSampah::create([
+            'user_id' => $user->id,
+            'sampah_id' => $sampah->id,
+            'berat' => $berat,
+            'harga_total' => $hargaTotal,
+        ]);
+
+        // Menyimpan poin yang didapat pengguna
+        Poin::create([
+            'idSampah' => $sampah->id,
+            'idUser' => $user->id,
+            'jumlahPoin' => $poin,
+        ]);
+    }
+
+    return redirect()->route('admin.beli_sampah')->with(
+        'success',
+        'Transaksi berhasil dilakukan. Total harga: Rp ' . number_format($totalHarga, 0, ',', '.') . '. Total Poin: ' . $totalPoin
+    );
+}
+
+
+
+    public function cekTelepon($telepon)
+{
+    // Cari pengguna dengan nomor telepon yang dimasukkan
+    $user = User::where('telepon', $telepon)->first();
+
+    if ($user) {
+        return response()->json(['exists' => true]); // Jika telepon ada
+    } else {
+        return response()->json(['exists' => false]); // Jika telepon tidak ada
+    }
+}
 
 
 
 
 }
+
