@@ -183,15 +183,49 @@
         }
     </style>
 </head>
+<script>
+    function toggleConfirmation(switchElement) {
+        // Simpan status saat ini
+        const currentState = switchElement.checked;
+
+        // Periksa hak akses atau kondisi lain
+        const hasAccess = true; // Contoh kondisi, ganti sesuai logika Anda
+
+        if (!hasAccess) {
+            // Jika pengguna tidak memiliki akses
+            alert("Anda tidak memiliki izin untuk mengubah status ini.");
+            switchElement.checked = !currentState; // Kembalikan ke status awal
+            return; // Keluar dari fungsi
+        }
+
+        // Menampilkan konfirmasi
+        if (confirm("Apakah Anda yakin ingin mengubah status konfirmasi pengambilan sampah?")) {
+            // Jika pengguna mengonfirmasi
+            if (switchElement.checked) {
+                // Tindakan jika switch diaktifkan
+                alert("Pengambilan Sampah Sudah Terkonfirmasi.");
+            } else {
+                // Tindakan jika switch dinonaktifkan
+                alert("Pengambilan Sampah Dibatalkan.");
+            }
+        } else {
+            // Jika pengguna membatalkan
+            switchElement.checked = !currentState; // Kembalikan ke status awal
+            alert("Perubahan dibatalkan.");
+        }
+    }
+</script>
+
+
+
 
 <body>
     <header class="header">
-        <div class="logo-container">
+        <a href="{{ route('home') }}">
             <img src="/images/logo1.png" alt="Logo Bank Sampah" class="logo">
-        </div>
+        </a>
         <div class="profile-container">
             <div class="profile-details">
-                <span class="customer-name">Guntur Ganteng</span>
                 <span class="customer-role">Administrator</span>
             </div>
         </div>
@@ -201,54 +235,57 @@
             <li><a href="{{ route('admin.index') }}">Dashboard</a></li>
             <li><a href="{{ route('admin.pengambilan_sampah') }}">Req Pengambilan Sampah</a></li>
             <li><a href="datasampah.html">Data Sampah</a></li>
-            <li><a href="pembeliansampah.html">Pembelian Sampah</a></li>
+            <li><a href="{{ route('admin.beli_sampah') }}">Pembelian Sampah</a></li>
             <li><a href="{{ route('admin.data_karya') }}">Data Hasil Karya</a></li>
-            <li><a href="pembeliankarya.html">Pembelian Hasil Karya</a></li>
-            <li><a href="keuanganpoin.html">Keuangan</a></li>
-            <li><a href="#">Logout</a></li>
+            <li><a href="{{ route('admin.transaksi_karya') }}">Pembelian Hasil Karya</a></li>
+            <li><a href="...">Keuangan</a></li>
+            <li>
+                <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                    @csrf
+                    <button type="submit" style="background: none; border: none; color: white; cursor: pointer;">
+                        Logout
+                    </button>
+                </form>
+            </li>
         </ul>
     </nav>
     <h2 style="text-align: center; margin-top: 50px; font-size: 2.2rem;">Request Pengambilan Sampah</h2>
     <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>Nama</th>
-                    <th>Alamat</th>
-                    <th>Nomor HP</th>
-                    <th>Deskripsi Sampah</th>
-                    <th>Jam Pengambilan</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Aldo</td>
-                    <td>Maguwoharjo Klaten</td>
-                    <td>0897654678</td>
-                    <td>Sampah Plastik dan Kertas</td>
-                    <td>12.00</td>
-                    <td>
-                        <label class="switch">
-                            <input type="checkbox" onclick="toggleConfirmation(this)">
-                            <span class="slider"></span>
-                        </label>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        @forelse ($requestSampah as $request)
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nama</th>
+                        <th>Alamat</th>
+                        <th>Nomor HP</th>
+                        <th>Deskripsi Sampah</th>
+                        <th>Jam Pengambilan</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ $request->nama }}</td>
+                        <td>{{ $request->alamat }}</td>
+                        <td>{{ $request->nomor_hp }}</td>
+                        <td>{{ $request->deskripsi_sampah }}</td>
+                        <td>{{ $request->jam_pengambilan }}</td>
+                        <td>
+                            <label class="switch">
+                                <input type="checkbox" onclick="toggleConfirmation(this)">
+                                <span class="slider"></span>
+                            </label>
+                        </td>
+                        
+                    </tr>
+                </tbody>
+            </table>
+        @empty
+            <p style="text-align: center;">Tidak ada data request pengambilan sampah.</p>
+        @endforelse
     </div>
 
-    <!-- JavaScript Terpisah di dalam Tag Script -->
-    <script>
-        function toggleConfirmation(element) {
-            if (element.checked) {
-                element.parentNode.querySelector('.slider').setAttribute('data-status', 'Terkonfirmasi');
-            } else {
-                element.parentNode.querySelector('.slider').setAttribute('data-status', 'Belum Terkonfirmasi');
-            }
-        }
-    </script>
+  
 </body>
 
 </html>

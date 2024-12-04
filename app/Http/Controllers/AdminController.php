@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Auth;
-use App\Models\HasilKarya;
+use Illuminate\Support\Facades\DB;
+
 use App\Models\User;
+use App\Models\HasilKarya;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Intervention\Image\Facades\Image;
+use App\Models\RequestPenjualanSampah;
 
 class AdminController extends Controller
 {
@@ -24,7 +28,8 @@ class AdminController extends Controller
 
     public function ambilSampah()
     {
-        return view('admin.pengambilan_sampah');
+        $requestSampah = RequestPenjualanSampah::all();
+        return view('admin.pengambilan_sampah', compact('requestSampah'));
     }
     public function dataSampah()
     {
@@ -32,7 +37,8 @@ class AdminController extends Controller
     }
     public function beliSampah()
     {
-        return view('admin.data_sampah');
+        
+        return view('admin.beli_sampah');
     }
     public function dataKarya()
     {
@@ -106,6 +112,31 @@ class AdminController extends Controller
             $karya->delete();
             return redirect()->route('admin.data_karya')->with('message', 'Hasil karya berhasil dihapus.');
         }
+
+
+
+
+
+        public function transaksiWithKarya()
+{
+    $transaksi = DB::table('transaksi_pembelian')
+        ->join('hasil_karya', 'transaksi_pembelian.hasilkarya_id', '=', 'hasil_karya.id')
+        ->join('users', 'transaksi_pembelian.user_id', '=', 'users.id')
+        ->select(
+            'transaksi_pembelian.id as transaksi_id',
+            'users.name as user_name', // Ambil nama user dari tabel users
+            'hasil_karya.namaKarya',
+            'transaksi_pembelian.total_harga',
+            'transaksi_pembelian.tanggal'
+        )
+        ->get();
+    return view('admin.transaksi_karya', compact('transaksi'));
+}
+
+
+
+
+
 
 
 }

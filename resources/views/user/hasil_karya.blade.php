@@ -282,10 +282,11 @@
             background: white;
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2); /* Tebalkan dan lebih gelap */
             width: 200px;
             text-align: center;
         }
+
 
         .karya-item img {
             width: 100%;
@@ -297,35 +298,64 @@
     <script>
         let totalItems = 0;
         let keranjang = [];
-
-        function tambahKeranjang(itemInputId, itemName, itemPrice) {
+    
+        function tambahKeranjang(itemInputId, itemName, itemPrice, availableStock) {
+            // Ambil jumlah item dari input
             const jumlahItem = parseInt(document.getElementById(itemInputId).value);
-            if (!isNaN(jumlahItem) && jumlahItem > 0) {
-                keranjang.push({ name: itemName, price: itemPrice, quantity: jumlahItem });
-                totalItems += jumlahItem;
-                document.getElementById('btn-beli').innerText = `Beli Sekarang (${totalItems} item)`;
-                alert(`${itemName} sebanyak ${jumlahItem} item telah ditambahkan ke keranjang.`);
-            } else {
+    
+            // Validasi input jumlah
+            if (isNaN(jumlahItem) || jumlahItem <= 0) {
                 alert("Masukkan jumlah item yang valid.");
+                return;
             }
+    
+            if (jumlahItem > availableStock) {
+                alert(`Stok tidak mencukupi! Stok tersedia: ${availableStock}.`);
+                return;
+            }
+    
+            // Tambahkan item ke keranjang atau perbarui jumlah
+            const existingItemIndex = keranjang.findIndex(item => item.id === itemInputId.split('-')[1]);
+            if (existingItemIndex !== -1) {
+                keranjang[existingItemIndex].quantity += jumlahItem;
+            } else {
+                keranjang.push({ 
+                    id: itemInputId.split('-')[1],
+                    name: itemName, 
+                    price: itemPrice, 
+                    quantity: jumlahItem 
+                });
+            }
+    
+            // Perbarui total jumlah barang
+            totalItems += jumlahItem;
+            document.getElementById('btn-beli').innerText = `Beli Sekarang (${totalItems} item)`;
+    
+            // Berikan notifikasi
+            alert(`${itemName} sebanyak ${jumlahItem} item telah ditambahkan ke keranjang.`);
         }
-
+    
         function bukaPopup() {
             if (keranjang.length === 0) {
                 alert("Keranjang Anda kosong. Tambahkan item terlebih dahulu.");
                 return;
             }
+    
             const rincianBarang = keranjang.map(item => 
                 `<p>${item.name} - ${item.quantity} pcs @ Rp ${item.price.toLocaleString()}</p>`
             ).join('');
+    
+            // Perbarui rincian barang dan total harga
             document.getElementById('rincian-barang').innerHTML = rincianBarang;
+            document.getElementById('total-harga').innerText = keranjang.reduce((total, item) => total + (item.price * item.quantity), 0).toLocaleString();
+    
             document.getElementById('popup-pembelian').style.display = 'flex';
         }
-
+    
         function tutupPopup() {
             document.getElementById('popup-pembelian').style.display = 'none';
         }
-
+    
         function toggleInfo() {
             const pilihan = document.querySelector('input[name="pengambilan"]:checked').value;
             const infoLayanan = document.getElementById('info-layanan');
@@ -335,19 +365,48 @@
                 infoLayanan.innerHTML = "<p>Jam layanan di Bank Sampah: <strong>Senin - Jumat, 09:00 - 16:00</strong></p>";
             }
         }
+    
+        async function simpanTransaksi() {
+        const keranjangData = JSON.stringify(keranjang); // Konversi keranjang menjadi JSON
+
+        try {
+            const response = await fetch("{{ route('customer.simpanTransaksi') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}" // CSRF token untuk Laravel
+                },
+                body: JSON.stringify({ keranjang: keranjangData })
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                alert(result.message || "Transaksi berhasil!");
+                // Reset keranjang
+                keranjang = [];
+                totalItems = 0;
+                document.getElementById('btn-beli').innerText = `Beli Sekarang`;
+            } else {
+                alert(result.error || "Terjadi kesalahan.");
+            }
+        } catch (error) {
+            alert("Terjadi kesalahan dalam mengirim data.");
+        }
+    }
+
 
         async function selesaikanPembelian() {
             const nama = document.getElementById('nama-pembeli').value;
             const alamat = document.getElementById('alamat-pembeli').value;
             const nomorHp = document.getElementById('nomor-hp-pembeli').value;
+            const tanggal = document.getElementById('tanggal-pembelian').value; // Ambil nilai tanggal
 
-            if (nama && alamat && nomorHp) {
-                // Memastikan data keranjang ada
+            if (nama && alamat && nomorHp && tanggal) {
                 const rincianBarang = keranjang.map(item => 
-                    `${item.name} - ${item.quantity} pcs @ Rp ${item.price.toLocaleString()}`
+                    `${item.name} - ${item.quantity} pcs @ Rp ${item.price.toLocaleString()}` 
                 ).join('\n');
 
-                // Membuat PDF dengan jsPDF
                 const { jsPDF } = window.jspdf;
                 const doc = new jsPDF();
 
@@ -355,22 +414,50 @@
                 doc.text(`Nama: ${nama}`, 10, 20);
                 doc.text(`Alamat: ${alamat}`, 10, 30);
                 doc.text(`Nomor HP: ${nomorHp}`, 10, 40);
-                doc.text("Rincian Barang:", 10, 50);
-                doc.text(rincianBarang, 10, 60);
+                doc.text(`Tanggal Pembelian: ${tanggal}`, 10, 50); // Tampilkan tanggal
+                doc.text("Rincian Barang:", 10, 60);
+                doc.text(rincianBarang, 10, 70);
 
-                // Mengunduh PDF
-                doc.save("Pembelian_HasilKaryaKarya.pdf");
+                const totalHarga = keranjang.reduce((total, item) => total + (item.price * item.quantity), 0);
+                doc.text(`Total Harga: Rp ${totalHarga.toLocaleString()}`, 10, 90 + (keranjang.length * 10));
 
-                alert("Pembelian berhasil! Terima kasih telah berbelanja.");
-                tutupPopup();
-                keranjang = [];
-                totalItems = 0;
-                document.getElementById('btn-beli').innerText = `Beli Sekarang`;
+                doc.save("Pembelian_HasilKarya.pdf");
+
+                // Kirim data pembelian ke controller
+                const response = await fetch("{{ route('customer.simpanTransaksi') }}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        keranjang: JSON.stringify(keranjang),
+                        nama: nama,
+                        alamat: alamat,
+                        nomorHp: nomorHp,
+                        tanggal: tanggal
+                    })
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    alert('Pembelian berhasil! Terima kasih telah berbelanja.');
+                    tutupPopup();  // Menutup popup setelah pembelian berhasil
+                    keranjang = [];
+                    totalItems = 0;
+                    document.getElementById('btn-beli').innerText = `Beli Sekarang`;
+                } else {
+                    alert(result.error || 'Terjadi kesalahan saat memproses transaksi.');
+                }
             } else {
                 alert("Mohon lengkapi data pembeli.");
             }
         }
+
+
+
     </script>
+    
 </head>
 <body>
     <header class="header">
@@ -379,7 +466,7 @@
         </a>
         <div class="profile-container">
             <div class="profile-details">
-                <span class="customer-name">Selamat Datang {{ $loggedInUser->name }}</span>
+                <span class="customer-name">Selamat Datang, {{ $loggedInUser->name }}</span>
                 <span class="customer-role">Customer</span>
             </div>
         </div>
@@ -395,7 +482,7 @@
             <li>
                 <form action="{{ route('logout') }}" method="POST" style="display: inline;">
                     @csrf
-                    <button type="submit" style="background: none; border: none; color: white; cursor: pointer;">
+                    <button type="submit" style="background: none; border: none; color: white; cursor: pointer; font-size: 16px; font-weight: bold;">
                         Logout
                     </button>
                 </form>
@@ -403,51 +490,79 @@
         </ul>
     </nav>
 
+    @if(session()->has('feedback'))
+    <div style="background-color: #4CAF50; color: white; padding: 10px; text-align: center;">
+        {{ session('feedback') }}
+    </div>
+    @endif
+
     <section class="judul-hasil-karya">
         <h1>Hasil Karya</h1>
         <p>Temukan berbagai produk kerajinan tangan unik dan menarik!</p>
     </section>
 
+    <section class="hasil-karya">
     <div class="karya-container">
         @forelse ($karyaList as $karya)
             <div class="karya-item">
                 <img src="{{ asset('storage/' . $karya->gambar) }}" alt="{{ $karya->namaKarya }}" />
                 <h3>{{ $karya->namaKarya }}</h3>
-                <p>Harga: Rp{{ number_format($karya->hargaKarya, 0, ',', '.') }}</p>
-                <p>Deskripsi: {{ $karya->deskripsi }}</p>
-                <p>Stok: {{ $karya->stok }}</p>
+                <p>Rp{{ number_format($karya->hargaKarya, 0, ',', '.') }}</p>
+                <p>{{ $karya->deskripsi }}</p>
+                <p>Sisa: {{ $karya->stok }}</p>
+                <input type="number" id="quantity-{{ $karya->id }}" min="1" placeholder="Jumlah" class="item-input">
+                <button class="btn-keranjang" 
+                onclick="tambahKeranjang('quantity-{{ $karya->id }}', '{{ $karya->namaKarya }}', {{ $karya->hargaKarya }}, {{ $karya->stok }})">
+                Tambah ke Keranjang
+                </button>
                 
+
             </div>
         @empty
             <p style="text-align: center;">Tidak ada data hasil karya.</p>
         @endforelse
     </div>
+    <div class="beli-container">
+        <button id="btn-beli" class="btn-beli" onclick="bukaPopup()">Beli Sekarang</button>
+    </div>
+    </section>
 
     <div id="popup-pembelian" class="popup-overlay">
         <div class="popup-content">
             <h2>Rincian Pembelian</h2>
             <div id="rincian-barang"></div>
+            <div id="total-harga-container">
+                <h3>Total Harga: Rp <span id="total-harga">0</span></h3>
+            </div>
+    
             <label>Nama:</label>
-            <input type="text" id="nama-pembeli" required>
-            <label>Alamat:</label>
-            <input type="text" id="alamat-pembeli" required>
-            <label>Nomor HP:</label>
-            <input type="text" id="nomor-hp-pembeli" required>
+            <input type="text" id="nama-pembeli" value="{{ $loggedInUser->name }}" readonly>
             
-            <div>
+            <label>Alamat:</label>
+            <input type="text" id="alamat-pembeli" value="{{ $loggedInUser->alamat }}" readonly>
+    
+            <label>Nomor HP:</label>
+            <input type="text" id="nomor-hp-pembeli" value="{{ $loggedInUser->telepon }}" readonly>
+    
+            <label>Tanggal Pembelian:</label>
+            <input type="date" id="tanggal-pembelian" required>
+    
+            {{-- <div>
                 <label>
                     <input type="radio" name="pengambilan" value="ambil" onclick="toggleInfo()"> Ambil di Bank Sampah
                 </label>
                 <label>
                     <input type="radio" name="pengambilan" value="kirim" onclick="toggleInfo()"> Dikirim
                 </label>
-            </div>
-
+            </div> --}}
+    
             <div id="info-layanan" class="info-layanan"></div>
             
             <button onclick="selesaikanPembelian()">Beli</button>
             <button onclick="tutupPopup()">Batal</button>
         </div>
     </div>
+    
+    
 </body>
 </html>
