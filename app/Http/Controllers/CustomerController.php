@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\DB;
+use App\Models\Poin;
 
 
 
+use App\Models\Sampah;
 use App\Models\HasilKarya;
 use Illuminate\Http\Request;
 use App\Models\TransaksiPembelian;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\RequestPenjualanSampah;
 
@@ -20,7 +22,12 @@ class CustomerController extends Controller
     public function dashboard()
     {
         $loggedInUser = Auth::user(); // Ambil data pengguna yang login
-        return view('user.index', ['loggedInUser' => $loggedInUser]);
+        // Hitung total poin berdasarkan transaksi
+        $totalPoin = Poin::where('idUser', $loggedInUser->id)->sum('jumlahPoin');
+        return view('user.index', [
+            'loggedInUser' => $loggedInUser,
+            'totalPoin' => $totalPoin
+        ]);
     }
 
     /**
@@ -29,25 +36,36 @@ class CustomerController extends Controller
     public function jualSampah()
     {
         $loggedInUser = Auth::user(); // Ambil data pengguna yang login
+        $totalPoin = Poin::where('idUser', $loggedInUser->id)->sum('jumlahPoin');
         return view('user.jual_sampah', [
-            'loggedInUser' => $loggedInUser
+            'loggedInUser' => $loggedInUser,
+            'totalPoin' => $totalPoin
         ]);
     }
 
     public function requestSampah(Request $request)
-    {
-        $validatedata = $request->validate([
-            'nama' => 'required|string|max:255', // Adjust varchar to string
-            'alamat' => 'required|string', // Adjust text to string
-            'nomor_hp' => 'required|string|max:255', // Adjust varchar to string
-            'deskripsi_sampah' => 'required|string', // Adjust text to string
-            'jam_pengambilan' => 'required|date_format:H:i|after_or_equal:09:00|before_or_equal:12:00', // Validate time format and range
-        ]);
-        
-        RequestPenjualanSampah::create($validatedata);
+{
+    // Validate incoming request data
+    $validatedata = $request->validate([
+        'alamat' => 'required|string|max:255', // Adjusting 'alamat' validation
+        'deskripsi_sampah' => 'required|string|max:255', // Adjusting 'deskripsi_sampah' validation
+        'jam_pengambilan' => 'required|date_format:H:i|after_or_equal:09:00|before_or_equal:12:00', // Validate time format and range
+    ]);
 
-        return redirect()->route('customer.jual_sampah')->with('success', 'Permintaan penjualan sampah berhasil dikirim.');
-    }
+    // Get logged-in user
+    $loggedInUser = Auth::user();
+
+    // Add 'nama' and 'nomor_hp' to the validated data from the logged-in user
+    $validatedata['nama'] = $loggedInUser->name;
+    $validatedata['nomor_hp'] = $loggedInUser->telepon;
+
+    // Save the data to the database using the RequestPenjualanSampah model
+    RequestPenjualanSampah::create($validatedata);
+
+    // Redirect back with a success message
+    return redirect()->route('customer.jual_sampah')->with('success', 'Permintaan penjualan sampah berhasil dikirim.');
+}
+
 
     
 
@@ -57,10 +75,12 @@ class CustomerController extends Controller
     public function hasilKarya()
     {
         $loggedInUser = Auth::user(); // Ambil data pengguna yang login
+        $totalPoin = Poin::where('idUser', $loggedInUser->id)->sum('jumlahPoin');
         $karyaList = HasilKarya::all(); // Ambil semua data hasil karya
         return view('user.hasil_karya', [
             'karyaList' => $karyaList,
-            'loggedInUser' => $loggedInUser
+            'loggedInUser' => $loggedInUser,
+            'totalPoin' => $totalPoin
         ]);
     }
 
@@ -146,6 +166,14 @@ class CustomerController extends Controller
         ]);
     }
     
+
+    
+
+
+    
+
+
+
 
     /**
      * Logout pengguna.

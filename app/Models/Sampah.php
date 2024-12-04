@@ -12,8 +12,9 @@ class Sampah extends Model
     protected $table = 'Sampah';
 
     protected $fillable = [
-        'jenis_sampah',
-        'harga',
+        'jenis_barang',
+        'berat',
+        'harga_per_kg',
     ];
 
 }

@@ -17,7 +17,9 @@
         <div class="profile-container">
             <div class="profile-details">
                 <span class="customer-name">Selamat Datang, {{ $loggedInUser->name }}</span>
-                <span class="customer-role">Customer</span>
+                <span class="customer-role" style="font-size: 18px; font-weight: bold; color: #4CAF50; background-color: #e8f5e9; padding: 5px 10px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                    Poin: {{ $totalPoin }}
+                </span>
             </div>
         </div>
     </header>

@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sampah', function (Blueprint $table) {
+        Schema::create('poin', function (Blueprint $table) {
             $table->id();
-            $table->string('jenis_sampah');
-            $table->decimal('harga_per_kg', 10, 2); // harga per kilogram
+            $table->foreignId('idSampah')->constrained('sampah')->onDelete('cascade');
+            $table->foreignId('idUser')->constrained('users')->onDelete('cascade');
+            $table->integer('jumlahPoin');
             $table->timestamps();
         });
     }
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sampah');
+        Schema::dropIfExists('poin');
     }
 };
