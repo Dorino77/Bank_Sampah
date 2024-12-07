@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bank Sampah - Dashboard</title>
+    <title>Data Sampah - Bank Sampah</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         /* Global Styles */
@@ -101,38 +101,53 @@
             background-color: #ffbb00;
         }
 
-        /* Table Container */
-        .table-container {
-            width: 80%;
-            margin: auto;
-            margin-top: 20px;
+        /* Main Content */
+        .main-content {
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #2e7d32, #66bb6a);
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
+        /* Table Styling */
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
+            margin-top: 20px;
         }
 
-        table th, table td {
+        th, td {
             padding: 10px;
             border: 1px solid #ddd;
-            text-align: center;
+            text-align: left;
         }
 
-        thead tr {
-            background-color: #4CAF50;
+        th {
+            background-color: #66bb6a;
             color: white;
         }
 
-        tbody tr {
-            background-color: #f9f9f9;
+        .container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
+        .header-title {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 
 <body>
+    <!-- Header with logo and profile -->
     <header class="header">
         <a href="{{ route('home') }}">
             <img src="/images/logo1.png" alt="Logo Bank Sampah" class="logo">
@@ -143,6 +158,8 @@
             </div>
         </div>
     </header>
+
+    <!-- Navbar -->
     <nav class="nav-menu">
         <ul>
             <li><a href="{{ route('admin.index') }}">Dashboard</a></li>
@@ -162,28 +179,42 @@
             </li>
         </ul>
     </nav>
-    <h2 style="text-align: center; margin-top: 50px; font-size: 2.2rem;">Daftar Transaksi Hasil Karya</h2>
-    
-    <div class="table-container">
-    <table>
-        <thead>
-            <tr>
-                {{-- <th>Nama</th> --}}
-                <th>Nama Karya</th>
-                <th>Total Harga</th>
-                <th>Tanggal</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($transaksi as $item)
-                <tr>
-                    {{-- <td>{{ $item->user_name }}</td> --}}
-                    <td>{{ $item->namaKarya }}</td>
-                    <td>Rp.{{ number_format($item->total_harga, 2) }}</td>
-                    <td>{{ $item->tanggal }}</td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <section class="container">
+            <h1 class="header-title">Data Sampah</h1>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Jenis Sampah</th>
+                        <th>Harga per KG</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($sampah as $item)
+                    <tr>
+                        <td>{{ $item->id }}</td>
+                        <td>{{ $item->jenis_sampah }}</td>
+                        <td>Rp {{ number_format($item->harga_per_kg, 0, ',', '.') }}</td>
+                        <td>
+                            <!-- Option to edit or delete -->
+                            <a href="#" class="btn-edit">Edit</a> |
+                            <form action="#" method="POST" style="display:inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn-delete">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </section>
+    </main>
 </body>
+
 </html>

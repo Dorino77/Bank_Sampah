@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Poin;
+use App\Models\TransaksiPembelian;
 use App\Models\User;
 use App\Models\Sampah;
 use App\Models\HasilKarya;
@@ -259,6 +260,39 @@ public function transaksiSampahStore(Request $request)
         return response()->json(['exists' => false]); // Jika telepon tidak ada
     }
 }
+
+
+
+    // Method untuk menampilkan halaman laporan
+    public function laporan()
+    {
+        
+            // Ambil data transaksi pembelian dan poin
+            $transaksi_pembelian = TransaksiPembelian::all();  // Ambil semua transaksi pembelian
+            $poin = Poin::all();  // Ambil semua data poin
+    
+            // Kirim data ke view
+            return view('admin.laporan', compact('transaksi_pembelian', 'poin'));
+        
+    }
+
+    public function data_sampah()
+    {
+    // Ambil data sampah dari tabel sampah
+    $sampah = sampah::all();
+    
+    // Kirim data sampah ke view
+    return view('admin.data_sampah', compact('sampah'));
+}
+
+public function edit($id)
+{
+    $sampah = sampah::findOrFail($id);  // Mengambil data sampah berdasarkan ID
+    return view('admin.edit_sampah', compact('sampah'));
+
+
+}
+
 
 
 

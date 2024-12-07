@@ -29,4 +29,8 @@ class TransaksiPembelian extends Model
     {
         return $this->belongsTo(HasilKarya::class, 'hasilkarya_id');
     }
+    
+    
 }
+
+
