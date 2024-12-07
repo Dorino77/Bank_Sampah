@@ -69,5 +69,28 @@ Route::middleware('auth:admin')->group(function () {
     Route::get('/admin/get-jenis-sampah', [AdminController::class, 'getJenisSampah']);
     Route::get('/admin/get-harga-per-kg/{jenisBarang}', [AdminController::class, 'getHargaPerKg']);
     Route::post('/admin/transaksi-sampah', [AdminController::class, 'transaksiSampahStore'])->name('admin.transaksi_sampah');
+
+    //Rute untuk dashboard admin
+    Route::prefix('admin')->middleware('auth')->group(function () {
+    Route::get('/admin/laporan', [AdminController::class, 'laporan'])->name('admin.laporan');
+        });
+    
+    Route::prefix('admin')->middleware('auth')->group(function () {
+    Route::get('/admin/data_sampah', [AdminController::class, 'data_sampah'])->name('admin.data_sampah');
+    Route::delete('/sampah/{id}', [AdminController::class, 'destroy'])->name('admin.delete_sampah');
+    Route::get('admin/edit_sampah/{id}/edit', [AdminController::class, 'edit'])->name('admin.edit_sampah');
+    Route::get('admin/edit_sampah/{id}/edit', [SampahController::class, 'edit'])->name('admin.edit_sampah');
+
+
+
+        });
+        
+
+    
 });
+    
+
+
+
+
 
