@@ -13,7 +13,7 @@
             font-family: 'Inter', sans-serif;
             box-sizing: border-box;
             color: #333;
-            background-color: #f4f4f4;
+            background-color: #f9fafb;
             background-image: url("../images/admin/background.png");
             background-size: cover;
             background-repeat: no-repeat;
@@ -25,7 +25,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 30px;
+            padding: 20px 30px;
             background: linear-gradient(135deg, #2e7d32, #66bb6a);
             color: white;
             border-bottom: 2px solid #fff;
@@ -37,7 +37,7 @@
         }
 
         .logo {
-            width: 210px;
+            width: 200px;
             height: auto;
         }
 
@@ -102,16 +102,21 @@
             background-color: #ffbb00;
         }
 
-        /* Form Edit */
+        /* Edit Form */
         .edit-form-container {
             display: flex;
             justify-content: center;
+            align-items: center;
             margin-top: 50px;
-            padding: 30px;
+            padding: 40px;
             background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            width: 60%;
+            border-radius: 15px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            width: 50%;
+            max-width: 900px;
+            height: auto;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .edit-form {
@@ -119,57 +124,78 @@
         }
 
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .form-group label {
             font-weight: 600;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             display: block;
+            color: #555;
+            font-size: 16px;
         }
 
         .form-group input,
         .form-group textarea {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
             font-size: 16px;
+            transition: all 0.3s ease;
         }
 
-        .form-group textarea {
-            resize: vertical;
-            height: 100px;
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: #66bb6a;
+            outline: none;
+            box-shadow: 0 0 5px rgba(102, 187, 106, 0.5);
+        }
+
+        .form-group input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        .form-group input[type="number"]::-webkit-outer-spin-button,
+        .form-group input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
         }
 
         .btn-save,
         .btn-cancel {
-            padding: 10px 15px;
+            padding: 14px 20px;
             font-size: 16px;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            margin-top: 20px;
         }
 
         .btn-save {
-            background-color: #007bff;
+            background-color: #66bb6a;
             color: white;
+            width: 100%;
         }
 
         .btn-save:hover {
-            background-color: #0056b3;
+            background-color: #2e7d32;
+            transform: scale(1.05);
         }
 
         .btn-cancel {
             background-color: #dc3545;
             color: white;
+            width: 100%;
+            margin-top: 10px;
         }
 
         .btn-cancel:hover {
             background-color: #a71d2a;
+            transform: scale(1.05);
         }
 
-        /* Footer */
         footer {
             text-align: center;
             padding: 20px;
@@ -214,55 +240,27 @@
         </ul>
     </nav>
 
-    <h2 style="text-align: center; margin-top: 50px; font-size: 2.2rem;">Edit Sampah</h2>
+    <h2 style="text-align: center; margin-top: 50px; font-size: 2.5rem; font-weight: 600; color: #333;">Edit Sampah</h2>
 
     <div class="edit-form-container">
-        <form class="edit-form" action="{{ route('admin.edit_sampah', $sampah->id) }}" method="POST" enctype="multipart/form-data">
-        
-    @csrf
-    @method('PUT')
-    <!-- Kolom form lainnya -->
-    <form action="{{ route('admin.update_sampah', $item->id) }}" method="POST">
-   
-        @csrf
+        <form action="{{ route('admin.update_sampah', $sampah->id) }}" method="POST" class="edit-form">
+            @csrf
             @method('PUT')
 
             <div class="form-group">
-                <label for="namaSampah">Nama Sampah:</label>
-                <input type="text" id="namaSampah" name="namaSampah" value="{{ old('namaSampah', $sampah->namaSampah) }}" required>
+                <label for="jenis_sampah">Jenis Sampah</label>
+                <input type="text" name="jenis_sampah" id="jenis_sampah" class="form-control" value="{{ $sampah->jenis_sampah }}" readonly>
             </div>
 
             <div class="form-group">
-                <label for="hargaSampah">Harga Sampah:</label>
-                <input type="number" id="hargaSampah" name="hargaSampah" value="{{ old('hargaSampah', $sampah->hargaSampah) }}" required>
+                <label for="harga_per_kg">Harga per KG</label>
+                <input type="number" name="harga_per_kg" id="harga_per_kg" class="form-control" value="{{ $sampah->harga_per_kg }}" required>
             </div>
 
-            <div class="form-group">
-                <label for="deskripsi">Deskripsi:</label>
-                <textarea id="deskripsi" name="deskripsi" required>{{ old('deskripsi', $sampah->deskripsi) }}</textarea>
-            </div>
-
-            <div class="form-group">
-                <label for="stok">Stok:</label>
-                <input type="number" id="stok" name="stok" value="{{ old('stok', $sampah->stok) }}" required>
-            </div>
-
-            <div class="form-group">
-                <label for="gambar">Gambar (kosongkan jika tidak ingin mengganti):</label>
-                <input type="file" id="gambar" name="gambar">
-            </div>
-
-            <div class="form-group" style="text-align: center;">
-                <button type="submit" class="btn-save">Simpan</button>
-                <a href="{{ route('admin.data_sampah') }}" class="btn-cancel">Batal</a>
-            </div>
+            <button type="submit" class="btn-save">Simpan Perubahan</button>
+            <button type="button" class="btn-cancel" onclick="window.location.href='{{ route('admin.data_sampah') }}'">Batal</button>
         </form>
-    </div> 
-
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2024 Bank Sampah. All rights reserved.</p>
-    </footer>
+    </div>
 
 </body>
 

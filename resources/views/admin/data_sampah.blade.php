@@ -101,17 +101,7 @@
             background-color: #ffbb00;
         }
 
-        /* Main Content */
-        .main-content {
-            padding: 40px 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-            background: linear-gradient(135deg, #2e7d32, #66bb6a);
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Table Styling */
+        /* Box-style Table */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -119,14 +109,23 @@
         }
 
         th, td {
-            padding: 10px;
+            padding: 15px;
             border: 1px solid #ddd;
             text-align: left;
+            background-color: #f9f9f9;
         }
 
         th {
             background-color: #66bb6a;
             color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f1f1f1;
+        }
+
+        tr:hover {
+            background-color: #ddd;
         }
 
         .container {
@@ -143,6 +142,112 @@
             text-align: center;
             margin-bottom: 20px;
         }
+
+        /* Action Buttons */
+        .btn-edit, .btn-delete {
+            padding: 5px 10px;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn-edit {
+            background-color: #ff9800;
+        }
+
+        .btn-edit:hover {
+            background-color: #f57c00;
+        }
+
+        .btn-delete {
+            background-color: #e53935;
+        }
+
+        .btn-delete:hover {
+            background-color: #d32f2f;
+        }
+
+        /* Form Styling */
+        form {
+            display: inline;
+        }
+
+        button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+        /* Card container to hold all cards */
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Responsive grid */
+    gap: 20px;
+    margin-top: 20px;
+}
+
+/* Individual card styling */
+.card {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+/* Card hover effect */
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Card title */
+.card-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+/* Card category and price */
+.card-category, .card-price {
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+
+/* Card action buttons */
+.card-actions {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+/* Edit and delete buttons */
+.btn-edit, .btn-delete {
+    padding: 8px 15px;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.btn-edit {
+    background-color: #ff9800;
+}
+
+.btn-edit:hover {
+    background-color: #f57c00;
+}
+
+.btn-delete {
+    background-color: #e53935;
+}
+
+.btn-delete:hover {
+    background-color: #d32f2f;
+}
+
     </style>
 </head>
 
@@ -180,41 +285,40 @@
         </ul>
     </nav>
 
-    <!-- Main Content -->
-    <main class="main-content">
-        <section class="container">
-            <h1 class="header-title">Data Sampah</h1>
+   <!-- Main Content -->
+<main class="main-content">
+    <section class="container">
+        <h1 class="header-title">Data Sampah</h1>
 
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Jenis Sampah</th>
-                        <th>Harga per KG</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($sampah as $item)
-                    <tr>
-                        <td>{{ $item->id }}</td>
-                        <td>{{ $item->jenis_sampah }}</td>
-                        <td>Rp {{ number_format($item->harga_per_kg, 0, ',', '.') }}</td>
-                        <td>
-                            <!-- Option to edit or delete -->
-                            <a href="#" class="btn-edit">Edit</a> |
-                            <form action="#" method="POST" style="display:inline;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn-delete">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </section>
-    </main>
+        <div class="card-container">
+            @foreach ($sampah as $sampahItem)
+            <div class="card">
+                <h3 class="card-title">{{ $sampahItem->jenis_sampah }}</h3>
+                <p class="card-price">Harga /Kg: Rp{{ number_format($sampahItem->harga_per_kg, 0, ',', '.') }}</p>
+
+                <!-- Mencari total berat untuk jenis sampah yang sesuai -->
+                @foreach ($result as $resultItem)
+                    @if ($sampahItem->id == $resultItem->id) <!-- Cek apakah ID sampah cocok -->
+                        <p>{{ number_format($resultItem->total_berat, 2, ',', '.') }} KG</p>
+                    @endif
+                @endforeach
+
+                <div class="card-actions">
+                    <!-- Option to edit or delete -->
+                    <a href="{{ route('admin.edit_sampah', $sampahItem->id) }}" class="btn btn-warning btn-edit">Edit</a>
+                    <form action="{{ route('admin.delete_sampah', $sampahItem->id) }}" method="POST" style="display:inline;">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger btn-delete">Delete</button>
+                    </form>
+                </div>
+            </div>
+            @endforeach
+        </div>
+    </section>
+</main>
+
+    
 </body>
 
 </html>

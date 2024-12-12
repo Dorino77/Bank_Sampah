@@ -276,23 +276,79 @@ public function transaksiSampahStore(Request $request)
         
     }
 
-    public function data_sampah()
-    {
-    // Ambil data sampah dari tabel sampah
-    $sampah = sampah::all();
-    
-    // Kirim data sampah ke view
-    return view('admin.data_sampah', compact('sampah'));
-}
-
-public function edit($id)
+public function data_sampah()
 {
-    $sampah = sampah::findOrFail($id);  // Mengambil data sampah berdasarkan ID
-    return view('admin.edit_sampah', compact('sampah'));
+    // Ambil data sampah dari tabel sampah
+    $sampah = Sampah::all();
 
+    // Join sampah dan transaksi_sampah untuk mendapatkan total berat
+    $result = Sampah::join('transaksi_sampah', 'sampah.id', '=', 'transaksi_sampah.sampah_id')
+                    ->select('sampah.id', 'sampah.jenis_sampah', DB::raw('SUM(transaksi_sampah.berat) as total_berat'))
+                    ->groupBy('sampah.id', 'sampah.jenis_sampah')
+                    ->get();
 
+    // Kirim data sampah dan hasil total berat ke view
+    return view('admin.data_sampah', compact('sampah', 'result'));
 }
 
+
+public function edit_sampah($id)
+{
+    // Ambil data sampah berdasarkan ID
+    $sampah = Sampah::find($id);
+    
+    
+    // Jika data sampah tidak ditemukan, redirect atau tampilkan error
+    if (!$sampah) {
+        return redirect()->route('admin.data_sampah')->with('error', 'Data Sampah Tidak Ditemukan');
+    }
+
+    // Kirim data sampah ke view edit
+    return view('admin.edit_sampah', compact('sampah'));
+}
+
+public function update_sampah(Request $request, $id)
+{
+    // Validasi data yang dikirimkan
+    $request->validate([
+        'jenis_sampah' => 'required|string|max:255',
+        'harga_per_kg' => 'required|numeric|min:0',
+    ]);
+
+    // Ambil data sampah berdasarkan ID
+    $sampah = Sampah::find($id);
+
+    // Jika data sampah tidak ditemukan, redirect atau tampilkan error
+    if (!$sampah) {
+        return redirect()->route('admin.data_sampah')->with('error', 'Data Sampah Tidak Ditemukan');
+    }
+
+    // Update data sampah
+    $sampah->update([
+        'jenis_sampah' => $request->jenis_sampah,
+        'harga_per_kg' => $request->harga_per_kg,
+    ]);
+
+    // Redirect ke halaman data sampah dengan pesan sukses
+    return redirect()->route('admin.data_sampah')->with('success', 'Data Sampah Berhasil Diperbarui');
+}
+
+public function delete_sampah($id)
+{
+    // Ambil data sampah berdasarkan ID
+    $sampah = Sampah::find($id);
+
+    // Jika data sampah tidak ditemukan, redirect atau tampilkan error
+    if (!$sampah) {
+        return redirect()->route('admin.data_sampah')->with('error', 'Data Sampah Tidak Ditemukan');
+    }
+
+    // Hapus data sampah
+    $sampah->delete();
+
+    // Redirect ke halaman data sampah dengan pesan sukses
+    return redirect()->route('admin.data_sampah')->with('success', 'Data Sampah Berhasil Dihapus');
+}
 
 
 

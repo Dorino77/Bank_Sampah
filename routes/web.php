@@ -71,19 +71,22 @@ Route::middleware('auth:admin')->group(function () {
     Route::post('/admin/transaksi-sampah', [AdminController::class, 'transaksiSampahStore'])->name('admin.transaksi_sampah');
 
     //Rute untuk dashboard admin
-    Route::prefix('admin')->middleware('auth')->group(function () {
+   
     Route::get('/admin/laporan', [AdminController::class, 'laporan'])->name('admin.laporan');
-        });
-    
-    Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/admin/data_sampah', [AdminController::class, 'data_sampah'])->name('admin.data_sampah');
-    Route::delete('/sampah/{id}', [AdminController::class, 'destroy'])->name('admin.delete_sampah');
-    Route::get('admin/edit_sampah/{id}/edit', [AdminController::class, 'edit'])->name('admin.edit_sampah');
-    Route::get('admin/edit_sampah/{id}/edit', [SampahController::class, 'edit'])->name('admin.edit_sampah');
+    // Route untuk menampilkan halaman edit sampah
+    Route::get('admin/data_sampah/{id}/edit', [AdminController::class, 'edit_sampah'])->name('admin.edit_sampah');
+    
+    // Route untuk mengupdate data sampah
+    Route::put('admin/data_sampah/{id}', [AdminController::class, 'update_sampah'])->name('admin.update_sampah');
+    
+    // Route untuk menghapus data sampah
+    Route::delete('admin/data_sampah/{id}', [AdminController::class, 'delete_sampah'])->name('admin.delete_sampah');
+    
 
 
 
-        });
+    
         
 
     
