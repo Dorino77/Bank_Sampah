@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Poin;
+use App\Models\TransaksiPembelian;
 use App\Models\User;
 use App\Models\Sampah;
 use App\Models\HasilKarya;
@@ -262,6 +263,43 @@ public function transaksiSampahStore(Request $request)
 
 
 
+    public function laporan()
+    {
+        // Total harga pembelian sampah
+        $totalHargaSampah = TransaksiSampah::sum('harga_total');
 
-}
+        // Total harga pembelian hasil karya
+        $totalHargaKarya = TransaksiPembelian::sum('total_harga');
+
+        // Kirimkan data ke view
+        return view('admin.laporan', [
+            'totalHargaSampah' => $totalHargaSampah,
+            'totalHargaKarya' => $totalHargaKarya
+        ]);
+    }
+
+
+
+        public function data_sampah()
+        {
+        // Ambil data sampah dari tabel sampah
+        $sampah = sampah::all();
+        
+        // Kirim data sampah ke view
+        return view('admin.data_sampah', compact('sampah'));
+    }
+
+    public function edit($id)
+    {
+        $sampah = sampah::findOrFail($id);  // Mengambil data sampah berdasarkan ID
+        return view('admin.edit_sampah', compact('sampah'));
+
+
+    }
+
+
+
+
+
+    }
 
