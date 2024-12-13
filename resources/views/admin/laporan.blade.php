@@ -4,23 +4,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bank Sampah - Dashboard</title>
+    <title>Transaksi</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-    <style>
-        /* Global Styles */
-        body {
-            margin: 0;
-            font-family: 'Inter', sans-serif;
-            box-sizing: border-box;
-            color: #333;
-            background-color: #000000;
-            background-image: url("../images/admin/background.png");
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-        }
+    <style>  
+                body {
+                    margin: 0;
+                    font-family: 'Inter', sans-serif;
+                    box-sizing: border-box;
+                    color: #333;
+                    background-color: #000000;
+                    background-image: url("{{ asset('images/admin/background.png') }}");
+                    background-size: cover;
+                    background-repeat: no-repeat;
+                    background-attachment: fixed;
+                }
+           
+            
 
-        /* Header */
         .header {
             display: flex;
             justify-content: space-between;
@@ -46,23 +46,10 @@
             gap: 10px;
         }
 
-        .profile-pic {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            border: 2px solid white;
-            object-fit: cover;
-        }
-
         .profile-details {
             display: flex;
             flex-direction: column;
             align-items: flex-start;
-        }
-
-        .customer-name {
-            font-size: 22px;
-            font-weight: 600;
         }
 
         .customer-role {
@@ -70,7 +57,6 @@
             opacity: 0.8;
         }
 
-        /* Navigation Menu */
         .nav-menu {
             background-color: #333;
             padding: 10px 0;
@@ -101,7 +87,6 @@
             background-color: #ffbb00;
         }
 
-        /* Main Content */
         .main-content {
             padding: 40px 20px;
             max-width: 1200px;
@@ -109,100 +94,64 @@
             background: linear-gradient(135deg, #2e7d32, #66bb6a);
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .welcome-section {
             text-align: center;
         }
-
-        .welcome-section h1 {
-            color: white;
-            font-size: 2rem;
-            margin-bottom: 10px;
-        }
-
-        .welcome-section p {
-            font-size: 1rem;
-            color: #ffffff;
-        }
-
-        /* Stats Section */
-        .stats-section {
+        .card-container {
             display: flex;
-            gap: 20px;
-            margin-top: 40px;
             justify-content: center;
+            gap: 20px;
             flex-wrap: wrap;
+            margin-top: 30px;
         }
 
-        .stat-box {
-            color: white;
+        .card {
+            width: 300px;
             padding: 20px;
+            background-color: Orange; /* Menambahkan warna latar belakang pink */
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             text-align: center;
-            width: 200px;
-            transition: transform 0.5s;
-            position: relative;
+            transition: transform 0.3s;
+            cursor: pointer;
         }
 
-        .stat-box:hover {
+        .card:hover {
             transform: scale(1.05);
         }
 
-        .stat-box img {
-            width: 40px;
-            height: 40px;
+        .card img {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 15px;
+        }
+
+        .card h2 {
+            font-size: 1.5rem;
+            color: #333;
             margin-bottom: 10px;
         }
 
-        .stat-box h2 {
-            font-size: 1.5rem;
-            margin: 0;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
-            /* Adding shadow */
+        .card p {
+            font-size: 1.2rem;
+            color: #666;
         }
 
-        .stat-value {
-            font-size: 2rem;
+        .card a {
+            text-decoration: none;
+            color: #2e7d32;
             font-weight: bold;
-            margin: 10px 0;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
-            /* Adding shadow */
         }
 
-        .stat-box p {
-            font-size: 1.5rem;
-            opacity: 0.9;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
-            /* Adding shadow */
-        }
-
-
-        /* Specific Colors for Each Box */
-        .box-1 {
-            background: linear-gradient(135deg, #4caf50, #81c784);
-            /* Green Gradient */
-        }
-
-        .box-2 {
-            background: linear-gradient(135deg, #42a5f5, #64b5f6);
-            /* Blue Gradient */
-        }
-
-        .box-3 {
-            background: linear-gradient(135deg, #ffb74d, #ffcc80);
-            /* Orange Gradient */
-        }
-
-        .box-4 {
-            background: linear-gradient(135deg, #ba68c8, #ce93d8);
-            /* Purple Gradient */
+        .total-price {
+            font-size: 1.2rem;
+            color: dark;
+            margin-top: 20px;
         }
     </style>
 </head>
 
 <body>
+    <!-- Header Section -->
     <header class="header">
         <a href="{{ route('admin.laporan') }}">
             <img src="/images/logo1.png" alt="Logo Bank Sampah" class="logo">
@@ -213,10 +162,10 @@
             </div>
         </div>
     </header>
-    
+
+    <!-- Navbar Section -->
     <nav class="nav-menu">
         <ul>
-            
             <li><a href="{{ route('admin.index') }}">Dashboard</a></li>
             <li><a href="{{ route('admin.pengambilan_sampah') }}">Req Pengambilan Sampah</a></li>
             <li><a href="{{ route('admin.data_sampah') }}">Data Sampah</a></li>
@@ -235,40 +184,33 @@
         </ul>
     </nav>
 
-        <div class="main-content">
-        <h1 class="center-text">Laporan Keuangan</h1>
-            
-        <!-- Menampilkan Statistik Transaksi Pembelian -->
-        <div class="stats-section">
-            <div class="stat-box box-1">
-                <h2>Total Transaksi Pembelian</h2>
-                <p class="stat-value">{{ $transaksi_pembelian->sum('harga') }}</p>
-                <p>Total Nilai Transaksi Pembelian</p>
+    <!-- Main Content Section -->
+    <div class="main-content">
+        <h1 style="color: white;">Daftar Transaksi</h1>
+           </div>
+           <div class="card-container">
+            <!-- Card Transaksi Sampah -->
+            <div class="card">
+                <img src="/images/admin/bgSampah.jpg" alt="Transaksi Sampah Icon">
+                <h2>Transaksi Sampah</h2>
+                <div class="total-price">
+                    <strong>Total Harga Pembelian Sampah: </strong>
+                    <span>{{ number_format($totalHargaSampah, 2) }} IDR</span>
+                </div>
+                
+               
             </div>
 
-            <!-- Menampilkan Statistik Poin -->
-            <div class="stat-box box-2">
-                <h2>Total Poin</h2>
-                <p class="stat-value">{{ $poin->sum('jumlah_poin') }}</p>
-                <p>Total Poin Terkumpul</p>
-            </div>
+            <!-- Card Transaksi Hasil Karya -->
+            <div class="card">
+                <img src="/images/admin/karya.png" alt="Transaksi Hasil Karya Icon">
+                <h2>Transaksi Hasil Karya</h2>
+                <div class="total-price">
+                    <strong>Total Harga Pembelian Hasil Karya: </strong>
+                    <span>{{ number_format($totalHargaKarya, 2) }} IDR</span>
+                </div>
+                
         </div>
-    </div>
-
-    <style>
-       
-
-        /* CSS tambahan agar container memusatkan konten secara vertikal dan horizontal */
-        .main-content {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;  /* Vertikal */
-            align-items: center;      /* Horizontal */
-            text-align: center;       /* Pastikan teks di dalamnya terpusat */
-            min-height: 10vh;         /* Pastikan kontainer memiliki tinggi minimal penuh layar */
-        }
-    </style>
-
 
 </body>
 

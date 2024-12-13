@@ -263,39 +263,43 @@ public function transaksiSampahStore(Request $request)
 
 
 
-    // Method untuk menampilkan halaman laporan
     public function laporan()
     {
-        
-            // Ambil data transaksi pembelian dan poin
-            $transaksi_pembelian = TransaksiPembelian::all();  // Ambil semua transaksi pembelian
-            $poin = Poin::all();  // Ambil semua data poin
-    
-            // Kirim data ke view
-            return view('admin.laporan', compact('transaksi_pembelian', 'poin'));
-        
+        // Total harga pembelian sampah
+        $totalHargaSampah = TransaksiSampah::sum('harga_total');
+
+        // Total harga pembelian hasil karya
+        $totalHargaKarya = TransaksiPembelian::sum('total_harga');
+
+        // Kirimkan data ke view
+        return view('admin.laporan', [
+            'totalHargaSampah' => $totalHargaSampah,
+            'totalHargaKarya' => $totalHargaKarya
+        ]);
     }
 
-    public function data_sampah()
+
+
+        public function data_sampah()
+        {
+        // Ambil data sampah dari tabel sampah
+        $sampah = sampah::all();
+        
+        // Kirim data sampah ke view
+        return view('admin.data_sampah', compact('sampah'));
+    }
+
+    public function edit($id)
     {
-    // Ambil data sampah dari tabel sampah
-    $sampah = sampah::all();
-    
-    // Kirim data sampah ke view
-    return view('admin.data_sampah', compact('sampah'));
-}
-
-public function edit($id)
-{
-    $sampah = sampah::findOrFail($id);  // Mengambil data sampah berdasarkan ID
-    return view('admin.edit_sampah', compact('sampah'));
+        $sampah = sampah::findOrFail($id);  // Mengambil data sampah berdasarkan ID
+        return view('admin.edit_sampah', compact('sampah'));
 
 
-}
+    }
 
 
 
 
 
-}
+    }
 
