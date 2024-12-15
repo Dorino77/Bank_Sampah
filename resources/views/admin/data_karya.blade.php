@@ -134,14 +134,14 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            width: 200px;
+            width: 250px;
             text-align: center;
         }
 
         .karya-item img {
-            width: 100%;
-            border-radius: 10px;
-            margin-bottom: 10px;
+            width: 240px;
+            height: 160px;
+            margin-bottom: 15px;
         }
 
         .btn-edit,

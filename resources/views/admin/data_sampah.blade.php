@@ -139,6 +139,7 @@
 
         .header-title {
             font-size: 2rem;
+            
             text-align: center;
             margin-bottom: 20px;
         }
