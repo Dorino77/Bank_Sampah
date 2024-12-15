@@ -102,7 +102,6 @@
             background-color: #ffbb00;
         }
 
-
         .add-button-container {
             display: flex;
             justify-content: center;
@@ -135,14 +134,14 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            width: 200px;
+            width: 250px;
             text-align: center;
         }
 
         .karya-item img {
-            width: 100%;
-            border-radius: 10px;
-            margin-bottom: 10px;
+            width: 240px;
+            height: 160px;
+            margin-bottom: 15px;
         }
 
         .btn-edit,
@@ -232,6 +231,87 @@
         .btn-save:hover {
             background-color: #0056b3;
         }
+
+        /* Media Queries for Responsiveness */
+        @media (max-width: 1024px) {
+            .header {
+                padding: 10px 20px;
+            }
+
+            .logo {
+                width: 180px;
+            }
+
+            .nav-menu ul {
+                display: block;
+                text-align: center;
+            }
+
+            .nav-menu li {
+                margin: 10px 0;
+            }
+
+            .karya-item {
+                width: 45%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .logo {
+                width: 150px;
+            }
+
+            .karya-item {
+                width: 90%;
+            }
+
+            .nav-menu ul {
+                display: block;
+                text-align: left;
+            }
+
+            .nav-menu li {
+                margin: 8px 0;
+            }
+
+            .add-button {
+                padding: 12px 25px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 10px 15px;
+            }
+
+            .logo {
+                width: 120px;
+            }
+
+            .karya-item {
+                width: 100%;
+            }
+
+            .nav-menu ul {
+                display: block;
+                padding-left: 0;
+            }
+
+            .nav-menu li {
+                margin: 10px 0;
+            }
+
+            .add-button {
+                width: 100%;
+                padding: 12px;
+                font-size: 1rem;
+            }
+        }
     </style>
 </head>
 
@@ -280,8 +360,6 @@
                 <p>Deskripsi: {{ $karya->deskripsi }}</p>
                 <p>Stok: {{ $karya->stok }}</p>
                 <button class="btn-edit" onclick="window.location.href='{{ route('admin.edit_karya', $karya->id) }}'">Edit</button>
-                {{-- <button onclick="openModal('{{ route('admin.edit_karya', $karya->id) }}')" class="btn-edit">Edit</button> --}}
-
                 <form action="{{ route('admin.delete_karya', $karya->id) }}" method="POST" style="display:inline-block;">
                     @csrf
                     @method('DELETE')
@@ -292,79 +370,6 @@
             <p style="text-align: center;">Tidak ada data hasil karya.</p>
         @endforelse
     </div>
-
-
-
-
-
-    {{-- <!-- Modal -->
-<div class="modal" id="editModal">
-    <div class="modal-content">
-        <h2>Edit Hasil Karya</h2>
-
-        @if ($errors->any())
-            <div class="alert">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
-        <form action="{{ route('admin.update_karya', $karya->id) }}" method="POST" enctype="multipart/form-data">
-            @csrf
-            @method('PUT')
-
-            <label for="namaKarya">Nama Karya:</label>
-            <input type="text" id="namaKarya" name="namaKarya" value="{{ old('namaKarya', $karya->namaKarya) }}" required>
-
-            <label for="hargaKarya">Harga Karya:</label>
-            <input type="number" id="hargaKarya" name="hargaKarya" value="{{ old('hargaKarya', $karya->hargaKarya) }}" required>
-
-            <label for="deskripsi">Deskripsi:</label>
-            <textarea id="deskripsi" name="deskripsi" required>{{ old('deskripsi', $karya->deskripsi) }}</textarea>
-
-            <label for="stok">Stok:</label>
-            <input type="number" id="stok" name="stok" value="{{ old('stok', $karya->stok) }}" required>
-
-            <label for="gambar">Gambar (kosongkan jika tidak ingin mengganti):</label>
-            <input type="file" id="gambar" name="gambar">
-
-            <div class="modal-footer">
-                <button type="submit" class="btn-save">Simpan</button>
-                <button type="button" class="btn-cancel" onclick="closeModal()">Batal</button>
-            </div>
-        </form>
-    </div>
-</div>
-
-
-
-
-
-
-<script>
-    function openModal(route) {
-        document.getElementById('editModal').style.display = 'flex';
-        document.getElementById('editForm').action = route;
-    }
-
-    function closeModal() {
-        document.getElementById('editModal').style.display = 'none';
-    }
-
-    // Optional: Close modal when clicking outside of it
-    window.onclick = function(event) {
-        var modal = document.getElementById('editModal');
-        if (event.target == modal) {
-            modal.style.display = 'none';
-        }
-    }
-</script> --}}
-
-
-
 </body>
 
 </html>

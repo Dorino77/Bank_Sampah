@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bank Sampah - Dashboard</title>
+    <title>Edit Sampah</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         /* Global Styles */
@@ -13,7 +13,7 @@
             font-family: 'Inter', sans-serif;
             box-sizing: border-box;
             color: #333;
-            background-color: #000000;
+            background-color: #f9fafb;
             background-image: url("../images/admin/background.png");
             background-size: cover;
             background-repeat: no-repeat;
@@ -25,9 +25,10 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 30px;
+            padding: 20px 30px;
             background: linear-gradient(135deg, #2e7d32, #66bb6a);
             color: white;
+            border-bottom: 2px solid #fff;
         }
 
         .logo-container {
@@ -36,7 +37,7 @@
         }
 
         .logo {
-            width: 210px;
+            width: 200px;
             height: auto;
         }
 
@@ -101,38 +102,112 @@
             background-color: #ffbb00;
         }
 
-        /* Table Container */
-        .table-container {
-            width: 80%;
-            margin: auto;
+        /* Edit Form */
+        .edit-form-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 50px;
+            padding: 40px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            width: 50%;
+            max-width: 900px;
+            height: auto;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .edit-form {
+            width: 100%;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: block;
+            color: #555;
+            font-size: 16px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: #66bb6a;
+            outline: none;
+            box-shadow: 0 0 5px rgba(102, 187, 106, 0.5);
+        }
+
+        .form-group input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        .form-group input[type="number"]::-webkit-outer-spin-button,
+        .form-group input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .btn-save,
+        .btn-cancel {
+            padding: 14px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.3s ease, background-color 0.3s ease;
             margin-top: 20px;
         }
 
-        table {
+        .btn-save {
+            background-color: #66bb6a;
+            color: white;
             width: 100%;
-            border-collapse: collapse;
+        }
+
+        .btn-save:hover {
+            background-color: #2e7d32;
+            transform: scale(1.05);
+        }
+
+        .btn-cancel {
+            background-color: #dc3545;
+            color: white;
+            width: 100%;
             margin-top: 10px;
         }
 
-        table th, table td {
-            padding: 10px;
-            border: 1px solid #ddd;
-            text-align: center;
+        .btn-cancel:hover {
+            background-color: #a71d2a;
+            transform: scale(1.05);
         }
 
-        thead tr {
-            background-color: #4CAF50;
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #333;
             color: white;
         }
-
-        tbody tr {
-            background-color: #f9f9f9;
-        }
-
     </style>
 </head>
 
 <body>
+
+    <!-- Header -->
     <header class="header">
         <a href="{{ route('home') }}">
             <img src="/images/logo1.png" alt="Logo Bank Sampah" class="logo">
@@ -143,6 +218,8 @@
             </div>
         </div>
     </header>
+
+    <!-- Navbar -->
     <nav class="nav-menu">
         <ul>
             <li><a href="{{ route('admin.index') }}">Dashboard</a></li>
@@ -162,36 +239,29 @@
             </li>
         </ul>
     </nav>
-    <h2 style="text-align: center; margin-top: 50px; font-size: 2.2rem;">Daftar Transaksi Hasil Karya</h2>
-    
-    <div class="table-container">
-        <form action="{{ route('admin.transaksi_karya') }}" method="GET" style="margin-bottom: 20px; text-align: center;">
-            <label for="tanggal">Pilih Tanggal:</label>
-            <input type="date" name="tanggal" id="tanggal" value="{{ request('tanggal') }}">
-            
-            <button type="submit">Cari</button>
+
+    <h2 style="text-align: center; margin-top: 50px; font-size: 2.5rem; font-weight: 600; color: #333;">Edit Sampah</h2>
+
+    <div class="edit-form-container">
+        <form action="{{ route('admin.update_sampah', $sampah->id) }}" method="POST" class="edit-form">
+            @csrf
+            @method('PUT')
+
+            <div class="form-group">
+                <label for="jenis_sampah">Jenis Sampah</label>
+                <input type="text" name="jenis_sampah" id="jenis_sampah" class="form-control" value="{{ $sampah->jenis_sampah }}" readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="harga_per_kg">Harga per KG</label>
+                <input type="number" name="harga_per_kg" id="harga_per_kg" class="form-control" value="{{ $sampah->harga_per_kg }}" required>
+            </div>
+
+            <button type="submit" class="btn-save">Simpan Perubahan</button>
+            <button type="button" class="btn-cancel" onclick="window.location.href='{{ route('admin.data_sampah') }}'">Batal</button>
         </form>
-        
-    <table>
-        <thead>
-            <tr>
-                {{-- <th>Nama</th> --}}
-                <th>Nama Pemesan</th>
-                <th>Nama Karya</th>
-                <th>Total Harga</th>
-                <th>Tanggal</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($transaksi as $item)
-                <tr>
-                    <td>{{ $item->user_name }}</td>
-                    <td>{{ $item->namaKarya }}</td>
-                    <td>Rp.{{ number_format($item->total_harga, 2) }}</td>
-                    <td>{{ $item->tanggal }}</td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
+    </div>
+
 </body>
+
 </html>

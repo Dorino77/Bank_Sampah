@@ -7,19 +7,17 @@
     <title>Transaksi</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <style>  
-                body {
-                    margin: 0;
-                    font-family: 'Inter', sans-serif;
-                    box-sizing: border-box;
-                    color: #333;
-                    background-color: #000000;
-                    background-image: url("{{ asset('images/admin/background.png') }}");
-                    background-size: cover;
-                    background-repeat: no-repeat;
-                    background-attachment: fixed;
-                }
-           
-            
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            color: #333;
+            background-color: #000;
+            background-image: url("{{ asset('images/admin/background.png') }}");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            box-sizing: border-box;
+        }
 
         .header {
             display: flex;
@@ -36,14 +34,13 @@
         }
 
         .logo {
-            width: 210px;
+            width: 200px;
             height: auto;
         }
 
         .profile-container {
             display: flex;
             align-items: center;
-            gap: 10px;
         }
 
         .profile-details {
@@ -54,7 +51,7 @@
 
         .customer-role {
             font-size: 18px;
-            opacity: 0.8;
+            opacity: 0.9;
         }
 
         .nav-menu {
@@ -90,24 +87,29 @@
         .main-content {
             padding: 40px 20px;
             max-width: 1200px;
-            margin: 0 auto;
-            background: linear-gradient(135deg, #2e7d32, #66bb6a);
+            margin: 20px auto;
+            background: rgba(255, 255, 255, 0.9);
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
+
+        .main-content h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
         .card-container {
             display: flex;
             justify-content: center;
             gap: 20px;
             flex-wrap: wrap;
-            margin-top: 30px;
         }
 
         .card {
             width: 300px;
             padding: 20px;
-            background-color: Orange; /* Menambahkan warna latar belakang pink */
+            background-color: #ffbb00;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             text-align: center;
@@ -131,21 +133,20 @@
             margin-bottom: 10px;
         }
 
-        .card p {
+        .card .total-price {
             font-size: 1.2rem;
-            color: #666;
+            color: #555;
+            margin-top: 10px;
         }
 
-        .card a {
-            text-decoration: none;
-            color: #2e7d32;
+        .card .total-price span {
             font-weight: bold;
+            color: #2e7d32;
         }
 
-        .total-price {
-            font-size: 1.2rem;
-            color: dark;
-            margin-top: 20px;
+        button {
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
         }
     </style>
 </head>
@@ -186,19 +187,15 @@
 
     <!-- Main Content Section -->
     <div class="main-content">
-        <h1 style="color: white;">Daftar Transaksi</h1>
-           </div>
-           <div class="card-container">
+        <h1>Laporan Keuangan</h1>
+        <div class="card-container">
             <!-- Card Transaksi Sampah -->
             <div class="card">
                 <img src="/images/admin/bgSampah.jpg" alt="Transaksi Sampah Icon">
                 <h2>Transaksi Sampah</h2>
                 <div class="total-price">
-                    <strong>Total Harga Pembelian Sampah: </strong>
-                    <span>{{ number_format($totalHargaSampah, 2) }} IDR</span>
+                    <span>Rp.{{ number_format($totalHargaSampah, 2, ',', '.') }}</span>
                 </div>
-                
-               
             </div>
 
             <!-- Card Transaksi Hasil Karya -->
@@ -206,12 +203,20 @@
                 <img src="/images/admin/karya.png" alt="Transaksi Hasil Karya Icon">
                 <h2>Transaksi Hasil Karya</h2>
                 <div class="total-price">
-                    <strong>Total Harga Pembelian Hasil Karya: </strong>
-                    <span>{{ number_format($totalHargaKarya, 2) }} IDR</span>
+                    <span>Rp.{{ number_format($totalHargaKarya, 2, ',', '.') }}</span>
                 </div>
-                
-        </div>
+            </div>
 
+            <!-- Card Total Transaksi -->
+            <div class="card">
+                <img src="/images/admin/indonesian-rupiah (1).png" alt="Total Icon">
+                <h2>Tabungan</h2>
+                <div class="total-price">
+                    <span>Rp.{{ number_format($hasilPengurangan, 2, ',', '.')}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>

@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Poin;
-use App\Models\TransaksiPembelian;
 use App\Models\User;
 use App\Models\Sampah;
+use App\Models\Laporan;
 use App\Models\HasilKarya;
 use Illuminate\Http\Request;
 use App\Models\TransaksiSampah;
+use App\Models\TransaksiPembelian;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\RequestPenjualanSampah;
@@ -145,21 +146,28 @@ class AdminController extends Controller
 
 
 
-        public function transaksiWithKarya()
-{
-    $transaksi = DB::table('transaksi_pembelian')
-        ->join('hasil_karya', 'transaksi_pembelian.hasilkarya_id', '=', 'hasil_karya.id')
-        ->join('users', 'transaksi_pembelian.user_id', '=', 'users.id')
-        ->select(
-            'transaksi_pembelian.id as transaksi_id',
-            'users.name as user_name', // Ambil nama user dari tabel users
-            'hasil_karya.namaKarya',
-            'transaksi_pembelian.total_harga',
-            'transaksi_pembelian.tanggal'
-        )
-        ->get();
-    return view('admin.transaksi_karya', compact('transaksi'));
-}
+        public function transaksiWithKarya(Request $request)
+        {
+            $query = DB::table('transaksi_pembelian')
+                ->join('hasil_karya', 'transaksi_pembelian.hasilkarya_id', '=', 'hasil_karya.id')
+                ->join('users', 'transaksi_pembelian.user_id', '=', 'users.id')
+                ->select(
+                    'transaksi_pembelian.id as transaksi_id',
+                    'users.name as user_name',
+                    'hasil_karya.namaKarya',
+                    'transaksi_pembelian.total_harga',
+                    'transaksi_pembelian.tanggal'
+                );
+        
+            // Filter berdasarkan tanggal
+            if ($request->has('tanggal') && $request->tanggal) {
+                $query->whereDate('transaksi_pembelian.tanggal', '=', $request->tanggal);
+            }
+        
+            $transaksi = $query->get();
+            return view('admin.transaksi_karya', compact('transaksi'));
+        }
+
 
 
 //====================================================//
@@ -271,32 +279,98 @@ public function transaksiSampahStore(Request $request)
         // Total harga pembelian hasil karya
         $totalHargaKarya = TransaksiPembelian::sum('total_harga');
 
-        // Kirimkan data ke view
-        return view('admin.laporan', [
-            'totalHargaSampah' => $totalHargaSampah,
-            'totalHargaKarya' => $totalHargaKarya
-        ]);
+        // Hitung hasil pengurangan
+    $hasilPengurangan = $totalHargaKarya - $totalHargaSampah;
+
+    // Simpan hasil pengurangan ke tabel laporan
+    $laporan = new Laporan(); // Pastikan model Laporan sudah dibuat
+    $laporan->total_sampah = $totalHargaSampah;
+    $laporan->total_karya = $totalHargaKarya;
+    $laporan->totalUang = $hasilPengurangan;
+    $laporan->tanggal = now(); // Jika ingin menyimpan tanggal saat ini
+    $laporan->save();
+
+    // Kirimkan data ke view
+    return view('admin.laporan', [
+        'totalHargaSampah' => $totalHargaSampah,
+        'totalHargaKarya' => $totalHargaKarya,
+        'hasilPengurangan' => $hasilPengurangan
+    ]);
     }
 
-
-
-        public function data_sampah()
-        {
-        // Ambil data sampah dari tabel sampah
-        $sampah = sampah::all();
-        
-        // Kirim data sampah ke view
-        return view('admin.data_sampah', compact('sampah'));
-    }
-
-    public function edit($id)
+    public function data_sampah()
     {
-        $sampah = sampah::findOrFail($id);  // Mengambil data sampah berdasarkan ID
-        return view('admin.edit_sampah', compact('sampah'));
+        // Ambil data sampah dari tabel sampah
+        $sampah = Sampah::all();
 
+        // Join sampah dan transaksi_sampah untuk mendapatkan total berat
+        $result = Sampah::join('transaksi_sampah', 'sampah.id', '=', 'transaksi_sampah.sampah_id')
+                        ->select('sampah.id', 'sampah.jenis_sampah', DB::raw('SUM(transaksi_sampah.berat) as total_berat'))
+                        ->groupBy('sampah.id', 'sampah.jenis_sampah')
+                        ->get();
 
+        // Kirim data sampah dan hasil total berat ke view
+        return view('admin.data_sampah', compact('sampah', 'result'));
     }
 
+
+    public function edit_sampah($id)
+    {
+        // Ambil data sampah berdasarkan ID
+        $sampah = Sampah::find($id);
+        
+        
+        // Jika data sampah tidak ditemukan, redirect atau tampilkan error
+        if (!$sampah) {
+            return redirect()->route('admin.data_sampah')->with('error', 'Data Sampah Tidak Ditemukan');
+        }
+
+        // Kirim data sampah ke view edit
+        return view('admin.edit_sampah', compact('sampah'));
+    }
+
+    public function update_sampah(Request $request, $id)
+    {
+        // Validasi data yang dikirimkan
+        $request->validate([
+            'jenis_sampah' => 'required|string|max:255',
+            'harga_per_kg' => 'required|numeric|min:0',
+        ]);
+
+        // Ambil data sampah berdasarkan ID
+        $sampah = Sampah::find($id);
+
+        // Jika data sampah tidak ditemukan, redirect atau tampilkan error
+        if (!$sampah) {
+            return redirect()->route('admin.data_sampah')->with('error', 'Data Sampah Tidak Ditemukan');
+        }
+
+        // Update data sampah
+        $sampah->update([
+            'jenis_sampah' => $request->jenis_sampah,
+            'harga_per_kg' => $request->harga_per_kg,
+        ]);
+
+        // Redirect ke halaman data sampah dengan pesan sukses
+        return redirect()->route('admin.data_sampah')->with('success', 'Data Sampah Berhasil Diperbarui');
+    }
+
+    public function delete_sampah($id)
+    {
+        // Ambil data sampah berdasarkan ID
+        $sampah = Sampah::find($id);
+
+        // Jika data sampah tidak ditemukan, redirect atau tampilkan error
+        if (!$sampah) {
+            return redirect()->route('admin.data_sampah')->with('error', 'Data Sampah Tidak Ditemukan');
+        }
+
+        // Hapus data sampah
+        $sampah->delete();
+
+        // Redirect ke halaman data sampah dengan pesan sukses
+        return redirect()->route('admin.data_sampah')->with('success', 'Data Sampah Berhasil Dihapus');
+    }
 
 
 

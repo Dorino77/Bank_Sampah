@@ -283,15 +283,16 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2); /* Tebalkan dan lebih gelap */
-            width: 200px;
+            width: 250px;
             text-align: center;
         }
 
 
         .karya-item img {
-            width: 100%;
-            border-radius: 10px;
-            margin-bottom: 10px;
+            width: 240px;
+            height: 160px;
+            margin-bottom: 15px;
+            border-radius: 25px;
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>

@@ -51,12 +51,20 @@
                     <input type="password" id="password" name="password" placeholder="Password" required>
                 </div>
                 <button type="submit" class="submit-btn">Log in</button>
+
                 @if(session('error'))
                 <div class="error-message">
-                    {{ session('error') }}</div>
-            @endif
+                    {{ session('error') }}
+                </div>
+                @endif
             </form>
+
+            <div class="forgot-password">
+                <a href="...">Lupa Password?</a>
+
+            </div>
         </div>
+
             
 
 
