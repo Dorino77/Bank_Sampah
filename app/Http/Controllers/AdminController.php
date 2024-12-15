@@ -270,17 +270,19 @@ public function transaksiSampahStore(Request $request)
 
 
 
-    // Method untuk menampilkan halaman laporan
     public function laporan()
     {
-        
-            // Ambil data transaksi pembelian dan poin
-            $transaksi_pembelian = TransaksiPembelian::all();  // Ambil semua transaksi pembelian
-            $poin = Poin::all();  // Ambil semua data poin
-    
-            // Kirim data ke view
-            return view('admin.laporan', compact('transaksi_pembelian', 'poin'));
-        
+        // Total harga pembelian sampah
+        $totalHargaSampah = TransaksiSampah::sum('harga_total');
+
+        // Total harga pembelian hasil karya
+        $totalHargaKarya = TransaksiPembelian::sum('total_harga');
+
+        // Kirimkan data ke view
+        return view('admin.laporan', [
+            'totalHargaSampah' => $totalHargaSampah,
+            'totalHargaKarya' => $totalHargaKarya
+        ]);
     }
 
 public function data_sampah()
@@ -360,5 +362,5 @@ public function delete_sampah($id)
 
 
 
-}
+    }
 

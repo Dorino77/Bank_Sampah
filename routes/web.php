@@ -70,6 +70,7 @@ Route::middleware('auth:admin')->group(function () {
     Route::get('/admin/get-harga-per-kg/{jenisBarang}', [AdminController::class, 'getHargaPerKg']);
     Route::post('/admin/transaksi-sampah', [AdminController::class, 'transaksiSampahStore'])->name('admin.transaksi_sampah');
 
+
     //Rute untuk dashboard admin
    
     Route::get('/admin/laporan', [AdminController::class, 'laporan'])->name('admin.laporan');
@@ -83,6 +84,10 @@ Route::middleware('auth:admin')->group(function () {
     // Route untuk menghapus data sampah
     Route::delete('admin/data_sampah/{id}', [AdminController::class, 'delete_sampah'])->name('admin.delete_sampah');
     
+    Route::get('/admin/laporan', [AdminController::class, 'laporan'])->name('admin.laporan');
+    Route::get('/admin/laporan_sampah', [AdminController::class, 'laporan_sampah'])->name('admin.laporan_sampah');
+    Route::get('/admin/laporan_karya', [AdminController::class, 'laporan_karya'])->name('admin.laporan_karya');
+
 
 
 
@@ -97,3 +102,4 @@ Route::middleware('auth:admin')->group(function () {
 
 
 
+    

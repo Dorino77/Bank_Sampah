@@ -28,12 +28,12 @@
             <li><a href="{{ route('user.index') }}">Dashboard</a></li>
             <li><a href="{{ route('customer.jual_sampah') }}">Jual Sampah</a></li>
             <li><a href="{{ route('customer.hasil_karya') }}">Hasil Karya</a></li>
-            {{-- <li><a href="{{ route('customer.') }}">Aktivitas</a></li>
-            <li><a href="{{ route('customer.') }}">Poin</a></li> --}}
+            {{-- <li><a href="{{ route('customer.') }}">Aktivitas</a></li> --}}
+            <li><a href="...">Poin</a></li>
             <li>
                 <form action="{{ route('logout') }}" method="POST" style="display: inline;">
                     @csrf
-                    <button type="submit" style="background: none; border: none; color: white; cursor: pointer; font-size: 16px; font-weight: bold;">
+                    <button type="submit" style="background: none; border: none; color: rgb(255, 25, 25); cursor: pointer; font-size: 16px; font-weight: bold;">
                         Logout
                     </button>
                 </form>
