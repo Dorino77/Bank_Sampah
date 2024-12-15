@@ -145,21 +145,28 @@ class AdminController extends Controller
 
 
 
-        public function transaksiWithKarya()
-{
-    $transaksi = DB::table('transaksi_pembelian')
-        ->join('hasil_karya', 'transaksi_pembelian.hasilkarya_id', '=', 'hasil_karya.id')
-        ->join('users', 'transaksi_pembelian.user_id', '=', 'users.id')
-        ->select(
-            'transaksi_pembelian.id as transaksi_id',
-            'users.name as user_name', // Ambil nama user dari tabel users
-            'hasil_karya.namaKarya',
-            'transaksi_pembelian.total_harga',
-            'transaksi_pembelian.tanggal'
-        )
-        ->get();
-    return view('admin.transaksi_karya', compact('transaksi'));
-}
+        public function transaksiWithKarya(Request $request)
+        {
+            $query = DB::table('transaksi_pembelian')
+                ->join('hasil_karya', 'transaksi_pembelian.hasilkarya_id', '=', 'hasil_karya.id')
+                ->join('users', 'transaksi_pembelian.user_id', '=', 'users.id')
+                ->select(
+                    'transaksi_pembelian.id as transaksi_id',
+                    'users.name as user_name',
+                    'hasil_karya.namaKarya',
+                    'transaksi_pembelian.total_harga',
+                    'transaksi_pembelian.tanggal'
+                );
+        
+            // Filter berdasarkan tanggal
+            if ($request->has('tanggal') && $request->tanggal) {
+                $query->whereDate('transaksi_pembelian.tanggal', '=', $request->tanggal);
+            }
+        
+            $transaksi = $query->get();
+            return view('admin.transaksi_karya', compact('transaksi'));
+        }
+        
 
 
 //====================================================//

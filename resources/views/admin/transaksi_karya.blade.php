@@ -165,10 +165,18 @@
     <h2 style="text-align: center; margin-top: 50px; font-size: 2.2rem;">Daftar Transaksi Hasil Karya</h2>
     
     <div class="table-container">
+        <form action="{{ route('admin.transaksi_karya') }}" method="GET" style="margin-bottom: 20px; text-align: center;">
+            <label for="tanggal">Pilih Tanggal:</label>
+            <input type="date" name="tanggal" id="tanggal" value="{{ request('tanggal') }}">
+            
+            <button type="submit">Cari</button>
+        </form>
+        
     <table>
         <thead>
             <tr>
                 {{-- <th>Nama</th> --}}
+                <th>Nama Pemesan</th>
                 <th>Nama Karya</th>
                 <th>Total Harga</th>
                 <th>Tanggal</th>
@@ -177,7 +185,7 @@
         <tbody>
             @foreach ($transaksi as $item)
                 <tr>
-                    {{-- <td>{{ $item->user_name }}</td> --}}
+                    <td>{{ $item->user_name }}</td>
                     <td>{{ $item->namaKarya }}</td>
                     <td>Rp.{{ number_format($item->total_harga, 2) }}</td>
                     <td>{{ $item->tanggal }}</td>
