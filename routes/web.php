@@ -76,6 +76,14 @@ Route::middleware('auth:admin')->group(function () {
    
     Route::get('/admin/laporan', [AdminController::class, 'laporan'])->name('admin.laporan');
     Route::get('/admin/data_sampah', [AdminController::class, 'data_sampah'])->name('admin.data_sampah');
+    
+    // Route untuk menampilkan form tambah sampah
+    Route::get('/admin/tambah_sampah', function () {
+    return view('admin.tambah_sampah');
+    })->name('admin.tambah_sampah');
+
+    // Route untuk memproses form tambah sampah
+    Route::post('/admin/tambah_sampah', [AdminController::class, 'tambah_sampah'])->name('admin.tambah_sampah');
     // Route untuk menampilkan halaman edit sampah
     Route::get('admin/data_sampah/{id}/edit', [AdminController::class, 'edit_sampah'])->name('admin.edit_sampah');
     

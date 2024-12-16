@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bank Sampah - Dashboard</title>
+    <title>Tambah Sampah - Bank Sampah</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         /* Global Styles */
@@ -28,16 +28,11 @@
             padding: 15px 30px;
             background: linear-gradient(135deg, #2e7d32, #66bb6a);
             color: white;
-        }
-
-        .logo-container {
-            display: flex;
-            align-items: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         }
 
         .logo {
             width: 210px;
-            height: auto;
         }
 
         .profile-container {
@@ -46,28 +41,10 @@
             gap: 10px;
         }
 
-        .profile-pic {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            border: 2px solid white;
-            object-fit: cover;
-        }
-
-        .profile-details {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .customer-name {
-            font-size: 22px;
-            font-weight: 600;
-        }
-
-        .customer-role {
+        .profile-details .customer-role {
             font-size: 18px;
-            opacity: 0.8;
+            font-weight: 500;
+            color: white;
         }
 
         /* Navigation Menu */
@@ -94,60 +71,91 @@
             color: white;
             padding: 10px 20px;
             border-radius: 5px;
-            transition: background 0.3s;
+            transition: all 0.3s ease;
+            font-weight: 500;
         }
 
         .nav-menu a:hover {
-            background-color: #ffbb00;
+            background: linear-gradient(135deg, #ffbb00, #ffa726);
+            transform: translateY(-2px);
         }
 
-        /* Table Container */
-        .table-container {
-            width: 80%;
-            margin: auto;
-            margin-top: 20px;
+        /* Form Styles */
+        .form-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-
-        table th, table td {
-            padding: 10px;
-            border: 1px solid #ddd;
+        .form-container h1 {
             text-align: center;
-        }
-
-        thead tr {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        tbody tr {
-            background-color: #f9f9f9;
-        }
-        .add-button {
-            display: inline-block;
+            font-size: 24px;
             margin-bottom: 20px;
-            padding: 10px 20px;
+        }
+
+        form label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        form input[type="text"],
+        form input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
             font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        form input:focus {
+            border-color: #4caf50;
+            outline: none;
+            box-shadow: 0 0 4px rgba(76, 175, 80, 0.5);
+        }
+
+        form button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #4caf50, #81c784);
             color: white;
-            background-color: #4CAF50;
             border: none;
-            border-radius: 5px;
+            border-radius: 6px;
+            font-size: 18px;
             cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
         }
 
-        .add-button:hover {
-            background-color: #45a049;
+        form button:hover {
+            background: linear-gradient(135deg, #388e3c, #66bb6a);
+            transform: translateY(-2px);
         }
 
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            text-align: center;
+            color: #007bff;
+            text-decoration: none;
+            font-size: 16px;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #0056b3;
+        }
     </style>
 </head>
 
 <body>
+    <!-- Header -->
     <header class="header">
         <a href="{{ route('home') }}">
             <img src="/images/logo1.png" alt="Logo Bank Sampah" class="logo">
@@ -158,6 +166,8 @@
             </div>
         </div>
     </header>
+
+    <!-- Navigation -->
     <nav class="nav-menu">
         <ul>
             <li><a href="{{ route('admin.index') }}">Dashboard</a></li>
@@ -177,36 +187,22 @@
             </li>
         </ul>
     </nav>
-    <h2 style="text-align: center; margin-top: 50px; font-size: 2.2rem;">Daftar Transaksi Hasil Karya</h2>
-    
-    <div style="text-align: center; margin-bottom: 20px;">
-        <form action="{{ route('admin.transaksi_karya') }}" method="GET">
-            <label for="tanggal" style="font-size: 1rem;">Cari Berdasarkan Tanggal: </label>
-            <input type="date" name="tanggal" id="tanggal" value="{{ request()->tanggal }}" style="padding: 5px 10px;">
-            <button type="submit" class="add-button" style="padding: 5px 15px;">Cari</button>
+
+    <!-- Form Container -->
+    <div class="form-container">
+        <h1>Tambah Data Sampah</h1>
+        <form action="{{ route('admin.tambah_sampah') }}" method="POST">
+            @csrf
+            <label for="jenis_sampah">Jenis Sampah</label>
+            <input type="text" id="jenis_sampah" name="jenis_sampah" placeholder="Masukkan jenis sampah" required>
+
+            <label for="harga_per_kg">Harga per Kg</label>
+            <input type="number" id="harga_per_kg" name="harga_per_kg" placeholder="Masukkan harga per Kg" required>
+
+            <button type="submit">Simpan</button>
         </form>
+        <a href="{{ route('admin.data_sampah') }}" class="back-link">Kembali ke Data Sampah</a>
     </div>
-        
-    <table>
-        <thead>
-            <tr>
-                {{-- <th>Nama</th> --}}
-                <th>Nama Pemesan</th>
-                <th>Nama Karya</th>
-                <th>Total Harga</th>
-                <th>Tanggal</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($transaksi as $item)
-                <tr>
-                    <td>{{ $item->user_name }}</td>
-                    <td>{{ $item->namaKarya }}</td>
-                    <td>Rp.{{ number_format($item->total_harga, 2) }}</td>
-                    <td>{{ $item->tanggal }}</td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
 </body>
+
 </html>

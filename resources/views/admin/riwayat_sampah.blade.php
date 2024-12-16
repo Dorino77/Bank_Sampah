@@ -220,10 +220,7 @@
             cursor: pointer;
         }
 
-        .save-button {
-            background-color: #4CAF50;
-            color: white;
-        }
+        
 
         .clear-button {
             background-color: #ff9800;
@@ -313,35 +310,43 @@
         </ul>
     </nav>
     <h2 style="text-align: center; margin-top: 50px; font-size: 2.2rem;">Pembelian Sampah</h2>
-    <div class="table-container">
-      {{-- <button class="add-button" onclick="window.location.href='{{ route('admin.transaksi_sampah') }}'">Tambah Pembelian</button> --}}
-        <table class="data-table">
-          <thead>
+<!-- Date Filter Form -->
+<div style="text-align: center; margin-bottom: 20px;">
+    <form action="{{ route('admin.riwayat_sampah') }}" method="GET">
+        <label for="tanggal" style="font-size: 1rem;">Cari Berdasarkan Tanggal: </label>
+        <input type="date" name="tanggal" id="tanggal" value="{{ request()->tanggal }}" style="padding: 5px 10px;">
+        <button type="submit" class="add-button" style="padding: 5px 15px;">Cari</button>
+    </form>
+</div>
+
+<div class="table-container">
+    <table class="data-table">
+        <thead>
             <tr>
-              <th>Tanggal</th>
-              <th>Nama</th>
-              <th>Alamat</th>
-              <th>Nomor HP</th>
-              <th>Jenis Barang</th>
-              <th>Berat</th>
-              <th>Harga Total (Rp)</th>
+                <th>Tanggal</th>
+                <th>Nama</th>
+                <th>Alamat</th>
+                <th>Nomor HP</th>
+                <th>Jenis Barang</th>
+                <th>Berat</th>
+                <th>Harga Total (Rp)</th>
             </tr>
-          </thead>
-          <tbody>
+        </thead>
+        <tbody>
             @foreach ($transaksi_sampah as $item)
-            <tr>
-                <td>{{ $item->created_at }}</td>
-                <td>{{ $item->user_name }}</td>
-                <td>{{ $item->user_alamat }}</td>
-                <td>{{ $item->user_telepon }}</td>
-                <td>{{ $item->jenis_sampah }}</td>
-                <td>{{ $item->berat }} kg</td>
-                <td>Rp.{{ number_format($item->harga_total, 2) }}</td>
-            </tr>
-        @endforeach
-          </tbody>
-        </table>
-      </div>
+                <tr>
+                    <td>{{ $item->created_at }}</td>
+                    <td>{{ $item->user_name }}</td>
+                    <td>{{ $item->user_alamat }}</td>
+                    <td>{{ $item->user_telepon }}</td>
+                    <td>{{ $item->jenis_sampah }}</td>
+                    <td>{{ $item->berat }} kg</td>
+                    <td>Rp.{{ number_format($item->harga_total, 2) }}</td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+</div>
   
       
     </body>

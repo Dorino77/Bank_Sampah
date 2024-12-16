@@ -148,6 +148,34 @@
             font-family: 'Inter', sans-serif;
             font-size: 1rem;
         }
+
+        .add-button {
+        display: center;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        width: 50%;
+        padding: 12px;
+        background: linear-gradient(135deg, #1d8522, #2e7d32);
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .add-button:hover {
+        background: linear-gradient(135deg, #2e7d32, #66bb6a);
+        transform: scale(1.05);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .add-button i {
+        font-size: 18px;
+    }
     </style>
 </head>
 
@@ -172,7 +200,7 @@
             <li><a href="{{ route('admin.data_sampah') }}">Data Sampah</a></li>
             <li><a href="{{ route('admin.beli_sampah') }}">Pembelian Sampah</a></li>
             <li><a href="{{ route('admin.data_karya') }}">Data Hasil Karya</a></li>
-            <li><a href="{{ route('admin.transaksi_karya') }}">Pembelian Hasil Karya</a></li>
+            {{-- <li><a href="{{ route('admin.transaksi_karya') }}">Pembelian Hasil Karya</a></li> --}}
             <li><a href="{{ route('admin.laporan') }}">Keuangan</a></li>
             <li>
                 <form action="{{ route('logout') }}" method="POST" style="display: inline;">
@@ -196,7 +224,10 @@
                 <div class="total-price">
                     <span>Rp.{{ number_format($totalHargaSampah, 2, ',', '.') }}</span>
                 </div>
-                <button class="add-button" onclick="window.location.href='{{ route('admin.riwayat_sampah') }}'">Lihat Detail</button>
+                <button class="add-button" onclick="window.location.href='{{ route('admin.riwayat_sampah') }}'">
+                    <i class="fa fa-recycle"></i> Lihat Detail
+                </button>
+                
             </div>
 
             <!-- Card Transaksi Hasil Karya -->
@@ -206,7 +237,9 @@
                 <div class="total-price">
                     <span>Rp.{{ number_format($totalHargaKarya, 2, ',', '.') }}</span>
                 </div>
-                <button class="add-button" onclick="window.location.href='{{ route('admin.transaksi_karya') }}'">Lihat Detail</button>
+                <button class="add-button" onclick="window.location.href='{{ route('admin.transaksi_karya') }}'">
+                    <i class="fa fa-paint-brush"></i> Lihat Detail
+                </button>
             </div>
 
             <!-- Card Total Transaksi -->

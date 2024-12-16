@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bank Sampah - Dashboard</title>
+    <title>Bank Sampah - Jual Sampah</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
 
     <style>
@@ -14,7 +14,7 @@
             font-family: 'Inter', sans-serif;
             color: #333;
             background-color: #000000;
-            background-image: url("../images/admin/background.png");
+            background-image: url("../images/cutomer/background.jpg");
             background-size: cover;
             background-repeat: no-repeat;
             background-attachment: fixed;
@@ -216,7 +216,7 @@
                 <li>
                     <form action="{{ route('logout') }}" method="POST" style="display: inline;">
                         @csrf
-                        <button type="submit" style="background: none; border: none; color: white; cursor: pointer; font-size: 16px; font-weight: bold;">
+                        <button type="submit" style="background: none; border: none; color: rgb(255, 25, 25); cursor: pointer; font-size: 16px; font-weight: bold;">
                             Logout
                         </button>
                     </form>

@@ -9,20 +9,20 @@ class Poin extends Model
 {
     use HasFactory;
 
-    // Menentukan nama tabel jika tidak menggunakan penamaan konvensional
+    // Nama tabel yang digunakan
     protected $table = 'poin';
 
-    // Menentukan kolom yang bisa diisi
+    // Kolom yang dapat diisi
     protected $fillable = [
-        'idSampah',
+        'idTransaksiSampah',
         'idUser',
         'jumlahPoin',
     ];
 
-    // Relasi dengan tabel Sampah
-    public function sampah()
+    // Relasi dengan tabel Transaksi_Sampah
+    public function transaksiSampah()
     {
-        return $this->belongsTo(Sampah::class, 'idSampah');
+        return $this->belongsTo(TransaksiSampah::class, 'idTransaksiSampah');
     }
 
     // Relasi dengan tabel User

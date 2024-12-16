@@ -8,6 +8,7 @@ use App\Models\Poin;
 
 use App\Models\Sampah;
 use App\Models\HasilKarya;
+use App\Models\PencairanPoin;
 use Illuminate\Http\Request;
 use App\Models\TransaksiPembelian;
 use Illuminate\Support\Facades\DB;
@@ -20,15 +21,20 @@ class CustomerController extends Controller
      * Tampilkan dashboard untuk pengguna yang login.
      */
     public function dashboard()
-    {
-        $loggedInUser = Auth::user(); // Ambil data pengguna yang login
-        // Hitung total poin berdasarkan transaksi
-        $totalPoin = Poin::where('idUser', $loggedInUser->id)->sum('jumlahPoin');
-        return view('user.index', [
-            'loggedInUser' => $loggedInUser,
-            'totalPoin' => $totalPoin
-        ]);
-    }
+{
+    $loggedInUser = Auth::user();
+
+    $totalPoin = PencairanPoin::where('idUser', $loggedInUser->id)->sum('jumlah_poin');
+
+    $sampah = Sampah::all();
+
+    return view('user.index', [
+        'loggedInUser' => $loggedInUser,
+        'totalPoin' => $totalPoin, // Pass the total points to the view
+        'sampah' => $sampah
+    ]);
+}
+
 
     /**
      * Tampilkan halaman jual sampah.
@@ -36,7 +42,7 @@ class CustomerController extends Controller
     public function jualSampah()
     {
         $loggedInUser = Auth::user(); // Ambil data pengguna yang login
-        $totalPoin = Poin::where('idUser', $loggedInUser->id)->sum('jumlahPoin');
+        $totalPoin = PencairanPoin::where('idUser', $loggedInUser->id)->sum('jumlah_poin');
         return view('user.jual_sampah', [
             'loggedInUser' => $loggedInUser,
             'totalPoin' => $totalPoin
@@ -75,7 +81,7 @@ class CustomerController extends Controller
     public function hasilKarya()
     {
         $loggedInUser = Auth::user(); // Ambil data pengguna yang login
-        $totalPoin = Poin::where('idUser', $loggedInUser->id)->sum('jumlahPoin');
+        $totalPoin = PencairanPoin::where('idUser', $loggedInUser->id)->sum('jumlah_poin');
         $karyaList = HasilKarya::all(); // Ambil semua data hasil karya
         return view('user.hasil_karya', [
             'karyaList' => $karyaList,

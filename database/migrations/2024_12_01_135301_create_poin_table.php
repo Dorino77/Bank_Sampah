@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('poin', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('idSampah')->constrained('sampah')->onDelete('cascade');
+            $table->foreignId('idTransaksiSampah')->constrained('transaksi_sampah')->onDelete('cascade');
             $table->foreignId('idUser')->constrained('users')->onDelete('cascade');
             $table->integer('jumlahPoin');
             $table->timestamps();

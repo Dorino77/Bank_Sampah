@@ -300,7 +300,7 @@
             <li><a href="{{ route('admin.data_sampah') }}">Data Sampah</a></li>
             <li><a href="{{ route('admin.beli_sampah') }}">Pembelian Sampah</a></li>
             <li><a href="{{ route('admin.data_karya') }}">Data Hasil Karya</a></li>
-            <li><a href="{{ route('admin.transaksi_karya') }}">Pembelian Hasil Karya</a></li>
+            {{-- <li><a href="{{ route('admin.transaksi_karya') }}">Pembelian Hasil Karya</a></li> --}}
             <li><a href="{{ route('admin.laporan') }}">Keuangan</a></li>
             <li>
                 <form action="{{ route('logout') }}" method="POST" style="display: inline;">

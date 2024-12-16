@@ -62,11 +62,14 @@
             <img src="\images\poster1.jpg" alt="Poster 12" class="carousel-item">
         </div>
     </section>
+    
     <!-- Pop-up Section -->
     <div id="popup" class="popup">
         <span id="popup-close" class="popup-close">&times;</span>
         <img id="popup-img" class="popup-content" src="" alt="Popup Image">
     </div>
+
+    
     <script>
         const carousel = document.querySelector('.carousel');
         const items = carousel.querySelectorAll('.carousel-item');
@@ -115,6 +118,19 @@
         // Initialize carousel positions
         updateCarousel();
     </script>
+
+<section class="container">
+    <h1 class="header-title">Data Sampah</h1>
+    <div class="card-container">
+        @foreach ($sampah as $sampahItem)
+        <div class="card">
+            <h3 class="card-title">{{ $sampahItem->jenis_sampah }}</h3>
+            <p class="card-price">Harga /Kg: Rp{{ number_format($sampahItem->harga_per_kg, 0, ',', '.') }}</p>
+            <button class="card-button">Detail</button>
+        </div>
+        @endforeach
+    </div>
+</section>
 
 </body>
 
