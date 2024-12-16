@@ -75,6 +75,25 @@ class AdminController extends Controller
         return view('admin.data_karya', compact('karyaList'));
     }
 
+    public function riwayatTransaksiSampah()
+    {
+        $transaksi_sampah = DB::table('transaksi_sampah')
+        ->join('sampah', 'transaksi_sampah.sampah_id', '=', 'sampah.id')
+        ->join('users', 'transaksi_sampah.user_id', '=', 'users.id')
+        ->select(
+            'transaksi_sampah.id as transaksi_id',
+            'users.name as user_name', // Ambil nama user dari tabel users
+            'users.alamat as user_alamat', // Ambil nama user dari tabel users
+            'users.telepon as user_telepon', // Ambil nama user dari tabel users
+            'sampah.jenis_sampah as jenis_sampah',
+            'transaksi_sampah.berat',
+            'transaksi_sampah.harga_total',
+            'transaksi_sampah.created_at'
+        )
+        ->get();
+        return view('admin.riwayat_sampah', compact('transaksi_sampah'));
+    }
+
     public function formTambahKarya ()
     {
         return view('admin.form_tambah_karya');
@@ -248,12 +267,54 @@ public function transaksiSampahStore(Request $request)
             'jumlahPoin' => $poin,
         ]);
     }
+    // Perbarui total poin pengguna di tabel pencairan_poin
+    $this->updateUserTotalPoin($user->id);
 
     return redirect()->route('admin.beli_sampah')->with(
         'success',
         'Transaksi berhasil dilakukan. Total harga: Rp ' . number_format($totalHarga, 0, ',', '.') . '. Total Poin: ' . $totalPoin
     );
 }
+
+
+public function updateTotalPoin()
+{
+    // Ambil total jumlah poin dari tabel 'poin', dikelompokkan berdasarkan 'idUser'
+    $totalPoin = DB::table('poin')
+        ->select('idUser', DB::raw('SUM(jumlahPoin) as jumlah_poin'))
+        ->groupBy('idUser')
+        ->get();
+
+    // Perbarui atau tambahkan data ke tabel 'pencairan_poin'
+    foreach ($totalPoin as $poin) {
+        DB::table('pencairan_poin')->updateOrInsert(
+            ['idUser' => $poin->idUser], // Kondisi untuk update/insert
+            [
+                'jumlah_poin' => $poin->jumlah_poin,
+                'updated_at' => now(),
+            ]
+        );
+    }
+}
+
+
+public function updateUserTotalPoin($idUser)
+{
+    // Hitung total poin untuk pengguna tertentu
+    $totalPoin = DB::table('poin')
+        ->where('idUser', $idUser)
+        ->sum('jumlahPoin');
+
+    // Perbarui atau tambahkan data ke tabel 'pencairan_poin'
+    DB::table('pencairan_poin')->updateOrInsert(
+        ['idUser' => $idUser], // Kondisi untuk update/insert
+        [
+            'jumlah_poin' => $totalPoin,
+            'updated_at' => now(),
+        ]
+    );
+}
+
 
 
 
@@ -283,7 +344,7 @@ public function transaksiSampahStore(Request $request)
     $hasilPengurangan = $totalHargaKarya - $totalHargaSampah;
 
     // Simpan hasil pengurangan ke tabel laporan
-    $laporan = new Laporan(); // Pastikan model Laporan sudah dibuat
+    $laporan = new Laporan(); 
     $laporan->total_sampah = $totalHargaSampah;
     $laporan->total_karya = $totalHargaKarya;
     $laporan->totalUang = $hasilPengurangan;
@@ -297,6 +358,7 @@ public function transaksiSampahStore(Request $request)
         'hasilPengurangan' => $hasilPengurangan
     ]);
     }
+    
 
     public function data_sampah()
     {

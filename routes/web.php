@@ -49,6 +49,7 @@ Route::middleware('auth:admin')->group(function () {
     //
     Route::get('/transaksi-sampah', [AdminController::class, 'transaksiSampah'])->name('admin.transaksi_sampah');
     //
+    Route::get('/riwayat-sampah', [AdminController::class, 'riwayatTransaksiSampah'])->name('admin.riwayat_sampah');
     Route::get('/data-karya', [AdminController::class, 'dataKarya'])->name('admin.data_karya');
     Route::get('/form-tambah-karya', [AdminController::class, 'formTambahKarya'])->name('admin.form_tambah_karya');
     Route::post('/admin.form_tambah_karya', [AdminController::class, 'tambahHasilKarya'])->name('admin.tambah_karya');

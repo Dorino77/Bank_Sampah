@@ -191,11 +191,12 @@
         <div class="card-container">
             <!-- Card Transaksi Sampah -->
             <div class="card">
-                <img src="/images/admin/bgSampah.jpg" alt="Transaksi Sampah Icon">
+                <img src="/images/admin/GmbSampah.png" alt="Transaksi Sampah Icon">
                 <h2>Transaksi Sampah</h2>
                 <div class="total-price">
                     <span>Rp.{{ number_format($totalHargaSampah, 2, ',', '.') }}</span>
                 </div>
+                <button class="add-button" onclick="window.location.href='{{ route('admin.riwayat_sampah') }}'">Lihat Detail</button>
             </div>
 
             <!-- Card Transaksi Hasil Karya -->
@@ -205,6 +206,7 @@
                 <div class="total-price">
                     <span>Rp.{{ number_format($totalHargaKarya, 2, ',', '.') }}</span>
                 </div>
+                <button class="add-button" onclick="window.location.href='{{ route('admin.transaksi_karya') }}'">Lihat Detail</button>
             </div>
 
             <!-- Card Total Transaksi -->

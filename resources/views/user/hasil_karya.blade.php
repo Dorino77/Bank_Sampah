@@ -421,6 +421,9 @@
 
                 const totalHarga = keranjang.reduce((total, item) => total + (item.price * item.quantity), 0);
                 doc.text(`Total Harga: Rp ${totalHarga.toLocaleString()}`, 10, 90 + (keranjang.length * 10));
+                doc.text("Terima kasih telah berbelanja di Bank Sampah!", 10, 100 + (keranjang.length * 10));
+                doc.text("Lakukan Pembayaran dan Pengambilan di Bank Sampah!", 10, 110 + (keranjang.length * 10));
+
 
                 doc.save("Pembelian_HasilKarya.pdf");
 
@@ -550,19 +553,12 @@
             <label>Tanggal Pembelian:</label>
             <input type="date" id="tanggal-pembelian" required>
     
-            {{-- <div>
-                <label>
-                    <input type="radio" name="pengambilan" value="ambil" onclick="toggleInfo()"> Ambil di Bank Sampah
-                </label>
-                <label>
-                    <input type="radio" name="pengambilan" value="kirim" onclick="toggleInfo()"> Dikirim
-                </label>
-            </div> --}}
-    
             <div id="info-layanan" class="info-layanan"></div>
             
             <button onclick="selesaikanPembelian()">Beli</button>
             <button onclick="tutupPopup()">Batal</button>
+
+            
         </div>
     </div>
     
