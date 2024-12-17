@@ -119,13 +119,11 @@
     </script>
 
 <section class="container">
-    <h1 class="header-title">Data Sampah</h1>
+    <h1 class="header-title">Harga Sampah</h1>
     <div class="card-container">
         @foreach ($sampah as $sampahItem)
         <div class="card">
-            <div class="card-image">
-                <img src="/images/sampah/{{ $sampahItem->gambar }}" alt="{{ $sampahItem->jenis_sampah }}" style="width: 100%; height: auto; border-radius: 8px 8px 0 0;">
-            </div>
+          
             <div class="card-content">
                 <h3 class="card-title">{{ $sampahItem->jenis_sampah }}</h3>
                 <p class="card-price">Harga /Kg: <span style="color: #2e7d32; font-weight: bold;">Rp{{ number_format($sampahItem->harga_per_kg, 0, ',', '.') }}</span></p>

@@ -555,10 +555,24 @@
     
             <div id="info-layanan" class="info-layanan"></div>
             
-            <button onclick="selesaikanPembelian()">Beli</button>
-            <button onclick="tutupPopup()">Batal</button>
+     <!-- Button Beli -->
+<button onclick="selesaikanPembelian()" style="background-color: #4CAF50; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer;">
+    Beli
+</button>
 
-            
+<!-- Button Batal -->
+<button onclick="tutupPopup()" style="background-color: #f44336; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer;">
+    Batal
+</button>
+
+<!-- Button Keluar -->
+<a href="{{ route('customer.hasil_karya') }}">
+    <button style="background-color: #FF9800; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer;">
+        Keluar
+    </button>
+</a>
+
+
         </div>
     </div>
     

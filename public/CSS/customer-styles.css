@@ -258,3 +258,57 @@ body {
 .card-button:hover {
     background-color: #2e7d32;
 }
+/* Carousel Section - Tambahkan Margin */
+.carousel-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    perspective: 1500px;
+    margin-top: 70px; /* Jarak atas */
+    margin-bottom: 50px; /* Tambahkan jarak bawah */
+}
+
+.carousel {
+    display: flex;
+    transform-style: preserve-3d;
+    transition: transform 1s;
+    width: 150px;
+    position: relative;
+    gap: 10px;
+    height: 300px; /* Tinggi tetap agar konten tidak keluar */
+}
+
+.carousel-item {
+    width: 180px;
+    height: 250px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    object-fit: cover;
+    transition: transform 1s, opacity 1s;
+    position: absolute;
+    opacity: 0.5;
+    top: 0; /* Pastikan item carousel mulai dari atas */
+}
+
+/* Container Section */
+.container {
+    margin-top: 30px; /* Tambahkan jarak antara carousel dan container */
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    z-index: 1; /* Pastikan container muncul di atas jika ada masalah */
+}
+
+/* Untuk Mencegah Tumpang Tindih */
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    z-index: 1;
+}
