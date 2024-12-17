@@ -260,6 +260,7 @@
                         <th>Nomor HP</th>
                         <th>Deskripsi Sampah</th>
                         <th>Jam Pengambilan</th>
+                        <th>Tanggal</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -270,6 +271,7 @@
                         <td>{{ $request->nomor_hp }}</td>
                         <td>{{ $request->deskripsi_sampah }}</td>
                         <td>{{ $request->jam_pengambilan }}</td>
+                        <td>{{ $request->created_at->format('d-m-Y') }}</td>
                         <td>
                             <label class="switch">
                                 <input type="checkbox" onclick="toggleConfirmation(this)">

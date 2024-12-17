@@ -9,20 +9,18 @@ class PencairanPoin extends Model
 {
     use HasFactory;
 
-    // Nama tabel (opsional jika sesuai dengan konvensi Laravel)
     protected $table = 'pencairan_poin';
 
-    // Kolom yang dapat diisi secara massal
     protected $fillable = [
-        'idUser',
-        'jumlah_poin',
+        'user_id',
+        'total_poin',
+        'jumlah_poin_dicairkan',
     ];
 
-    /**
-     * Relasi ke model User (satu pencairan poin dimiliki oleh satu pengguna).
-     */
+    public $timestamps = false; // Menonaktifkan created_at dan updated_at
+
     public function user()
     {
-        return $this->belongsTo(User::class, 'idUser', 'id');
+        return $this->belongsTo(User::class);
     }
 }

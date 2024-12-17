@@ -4,26 +4,19 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+return new class extends Migration {
+    public function up()
     {
         Schema::create('pencairan_poin', function (Blueprint $table) {
-            $table->id(); // Primary key
-            $table->unsignedBigInteger('idUser'); // Foreign key
-            $table->integer('jumlah_poin')->default(0); // Total poin redeemed
-            $table->foreign('idUser')->references('id')->on('users')->onDelete('cascade'); // Foreign key constraint
-            $table->timestamps(); // Timestamps for created_at and updated_at
+            $table->id();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // Relasi ke tabel users
+            $table->integer('total_poin')->default(0); // Total poin yang dimiliki
+            $table->integer('jumlah_poin_dicairkan'); // Poin yang dicairkan
+            $table->timestamp('created_at')->useCurrent();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('pencairan_poin');
     }

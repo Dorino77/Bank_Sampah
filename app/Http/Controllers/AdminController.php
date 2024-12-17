@@ -9,6 +9,7 @@ use App\Models\Laporan;
 use App\Models\Tabungan;
 use App\Models\HasilKarya;
 use Illuminate\Http\Request;
+use App\Models\PencairanPoin;
 use App\Models\TransaksiSampah;
 use App\Models\TransaksiPembelian;
 use Illuminate\Support\Facades\DB;
@@ -289,7 +290,7 @@ public function transaksiSampahStore(Request $request)
         ]);
 
         // Update the user's total points
-        $this->updateUserTotalPoin($user->id);
+        // $this->updateUserTotalPoin($user->id);
     }
 
     $transaksi_sampah = DB::table('transaksi_sampah')
@@ -309,51 +310,6 @@ public function transaksiSampahStore(Request $request)
 
     return view('admin.beli_sampah', compact('transaksi_sampah', 'totalHarga', 'totalPoin'));
 }
-
-
-
-
-
-public function updateTotalPoin()
-{
-    // Ambil total jumlah poin dari tabel 'poin', dikelompokkan berdasarkan 'idUser'
-    $totalPoin = DB::table('poin')
-        ->select('idUser', DB::raw('SUM(jumlahPoin) as jumlah_poin'))
-        ->groupBy('idUser')
-        ->get();
-
-    // Perbarui atau tambahkan data ke tabel 'pencairan_poin'
-    foreach ($totalPoin as $poin) {
-        DB::table('pencairan_poin')->updateOrInsert(
-            ['idUser' => $poin->idUser], // Kondisi untuk update/insert
-            [
-                'jumlah_poin' => $poin->jumlah_poin,
-                'updated_at' => now(),
-            ]
-        );
-    }
-}
-
-
-public function updateUserTotalPoin($idUser)
-{
-    // Hitung total poin untuk pengguna tertentu
-    $totalPoin = DB::table('poin')
-        ->where('idUser', $idUser)
-        ->sum('jumlahPoin');
-
-    // Perbarui atau tambahkan data ke tabel 'pencairan_poin'
-    DB::table('pencairan_poin')->updateOrInsert(
-        ['idUser' => $idUser], // Kondisi untuk update/insert
-        [
-            'jumlah_poin' => $totalPoin,
-            'updated_at' => now(),
-        ]
-    );
-}
-
-
-
 
     public function cekTelepon($telepon)
 {
@@ -427,52 +383,6 @@ public function laporan()
         'saldo' => $tabungan ? $tabungan->totalUang : 0, // Kirimkan saldo ke view
     ]);
 }
-
-
-
-
-
-// public function showTabungan()
-// {
-//     // Ambil total uang dari tabel 'tabungan'
-//     $tabungan = Tabungan::latest()->first(); // Ambil baris terbaru
-//     $totalUang = $tabungan ? $tabungan->totalUang : 0; // Jika tidak ada, set 0
-
-//     return view('admin.tabungan', compact('totalUang'));
-// }
-
-// public function tambahTabungan(Request $request)
-// {
-//     $request->validate([
-//         'jumlah' => 'required|numeric|min:1',
-//     ]);
-
-//     $jumlah = $request->input('jumlah');
-
-//     // Menambahkan jumlah ke total uang
-//     Tabungan::tambahTotalUang($jumlah);
-
-//     return redirect()->route('admin.tabungan')->with('success', 'Tabungan berhasil ditambahkan.');
-// }
-
-// public function kurangiTabungan(Request $request)
-// {
-//     $request->validate([
-//         'jumlah' => 'required|numeric|min:1',
-//     ]);
-
-//     $jumlah = $request->input('jumlah');
-
-//     // Mengurangi jumlah dari total uang
-//     $success = Tabungan::kurangiTotalUang($jumlah);
-
-//     if ($success) {
-//         return redirect()->route('admin.tabungan')->with('success', 'Tabungan berhasil dikurangi.');
-//     } else {
-//         return redirect()->route('admin.tabungan')->with('error', 'Jumlah pengurangan melebihi saldo tabungan.');
-//     }
-// }
-
 
     
 
@@ -592,7 +502,10 @@ public function pencairanPoin(Request $request)
     // Logika pengurangan poin
     $userPoin = Poin::where('idUser', $request->idUser)->get();
     $poinToReduce = $request->jumlahPoin;
-
+    $totalPoin = $userPoin->sum('jumlahPoin'); // Total poin user saat ini
+    if ($poinToReduce > $totalPoin) {
+        return redirect()->back()->with('error', 'Jumlah poin melebihi total poin yang dimiliki.');
+    }
     $hargaToReduce = $poinToReduce * 1000; // Hitung harga total yang akan dikurangi
 
     foreach ($userPoin as $poin) {
@@ -624,7 +537,13 @@ public function pencairanPoin(Request $request)
         }
     }
 
-    return redirect()->back()->with('success', 'Poin dan Harga Total Berhasil Dikurangkan!');
+    PencairanPoin::create([
+        'user_id' => $request->idUser,
+        'total_poin' => $totalPoin,
+        'jumlah_poin_dicairkan' => $request->jumlahPoin,
+    ]);
+
+    return redirect()->back()->with('success', 'Poin Berhasil Dicairkan!');
 }
 
 

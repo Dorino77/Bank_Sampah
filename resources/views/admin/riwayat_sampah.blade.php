@@ -336,7 +336,7 @@
         <tbody>
             @foreach ($transaksi_sampah as $item)
                 <tr>
-                    <td>{{ $item->created_at }}</td>
+                    <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d-m-Y') }}</td>
                     <td>{{ $item->user_name }}</td>
                     <td>{{ $item->user_alamat }}</td>
                     <td>{{ $item->user_telepon }}</td>

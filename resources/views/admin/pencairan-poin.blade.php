@@ -160,6 +160,14 @@
                     </div>
                 @endif
 
+                @if(session('error'))
+                <div class="alert alert-danger d-flex align-items-center" role="alert">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    <div>{{ session('error') }}</div>
+                </div>
+                @endif
+
+
                 <!-- Form -->
                 <form action="{{ route('admin.reduce-poin.submit') }}" method="POST">
                     @csrf

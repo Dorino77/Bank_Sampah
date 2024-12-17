@@ -204,7 +204,7 @@
                     <td>{{ $item->user_name }}</td>
                     <td>{{ $item->namaKarya }}</td>
                     <td>Rp.{{ number_format($item->total_harga, 2) }}</td>
-                    <td>{{ $item->tanggal }}</td>
+                    <td>{{ \Carbon\Carbon::parse($item->tanggal)->format('d-m-Y') }}</td>
                 </tr>
             @endforeach
         </tbody>

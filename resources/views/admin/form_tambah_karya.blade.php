@@ -233,7 +233,7 @@
             </div>
         </div>
     </header>
-    
+   
 
     <div class="register-container">
         <div class="form-box">
