@@ -75,6 +75,14 @@ Route::middleware('auth:admin')->group(function () {
     //Rute untuk dashboard admin
    
     Route::get('/admin/laporan', [AdminController::class, 'laporan'])->name('admin.laporan');
+    Route::get('admin/tabungan', [AdminController::class, 'showTabungan'])->name('admin.tabungan');
+    Route::post('admin/tabungan/tambah', [AdminController::class, 'tambahTabungan'])->name('admin.tambahTabungan');
+    Route::post('admin/tabungan/kurangi', [AdminController::class, 'kurangiTabungan'])->name('admin.kurangiTabungan');
+
+    Route::get('/admin/pencairan-poin', [AdminController::class, 'indexPencairanPoin'])->name('admin.pencairan-poin');
+    Route::post('/admin/pencairan-poin', [AdminController::class, 'pencairanPoin'])->name('admin.reduce-poin.submit');
+    
+    
     Route::get('/admin/data_sampah', [AdminController::class, 'data_sampah'])->name('admin.data_sampah');
     
     // Route untuk menampilkan form tambah sampah

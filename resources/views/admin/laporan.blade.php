@@ -200,12 +200,12 @@
             <li><a href="{{ route('admin.data_sampah') }}">Data Sampah</a></li>
             <li><a href="{{ route('admin.beli_sampah') }}">Pembelian Sampah</a></li>
             <li><a href="{{ route('admin.data_karya') }}">Data Hasil Karya</a></li>
-            {{-- <li><a href="{{ route('admin.transaksi_karya') }}">Pembelian Hasil Karya</a></li> --}}
+            <li><a href="{{ route('admin.pencairan-poin') }}">Pencairan Poin</a></li>
             <li><a href="{{ route('admin.laporan') }}">Keuangan</a></li>
             <li>
                 <form action="{{ route('logout') }}" method="POST" style="display: inline;">
                     @csrf
-                    <button type="submit" style="background: none; border: none; color: white; cursor: pointer;">
+                    <button type="submit" style="background: none; border: none; color: rgb(255, 25, 25); cursor: pointer; font-size: 16px; font-weight: bold;">
                         Logout
                     </button>
                 </form>
@@ -222,7 +222,7 @@
                 <img src="/images/admin/GmbSampah.png" alt="Transaksi Sampah Icon">
                 <h2>Transaksi Sampah</h2>
                 <div class="total-price">
-                    <span>Rp.{{ number_format($totalHargaSampah, 2, ',', '.') }}</span>
+                    <span>Rp.{{ number_format($totalHistorySampah, 2, ',', '.') }}</span>
                 </div>
                 <button class="add-button" onclick="window.location.href='{{ route('admin.riwayat_sampah') }}'">
                     <i class="fa fa-recycle"></i> Lihat Detail
@@ -242,14 +242,15 @@
                 </button>
             </div>
 
-            <!-- Card Total Transaksi -->
+            <!-- Card tabungan -->
             <div class="card">
                 <img src="/images/admin/indonesian-rupiah (1).png" alt="Total Icon">
-                <h2>Tabungan</h2>
+                <h2>Saldo</h2>
                 <div class="total-price">
-                    <span>Rp.{{ number_format($hasilPengurangan, 2, ',', '.')}}</span>
+                    <span>Rp.{{ number_format($saldo, 2, ',', '.') }}</span>
                 </div>
             </div>
+
         </div>
     </div>
 </body>

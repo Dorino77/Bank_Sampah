@@ -28,8 +28,7 @@
             <li><a href="{{ route('user.index') }}">Dashboard</a></li>
             <li><a href="{{ route('customer.jual_sampah') }}">Jual Sampah</a></li>
             <li><a href="{{ route('customer.hasil_karya') }}">Hasil Karya</a></li>
-            {{-- <li><a href="{{ route('customer.') }}">Aktivitas</a></li> --}}
-            <li><a href="...">Poin</a></li>
+            
             <li>
                 <form action="{{ route('logout') }}" method="POST" style="display: inline;">
                     @csrf
@@ -124,14 +123,22 @@
     <div class="card-container">
         @foreach ($sampah as $sampahItem)
         <div class="card">
-            <h3 class="card-title">{{ $sampahItem->jenis_sampah }}</h3>
-            <p class="card-price">Harga /Kg: Rp{{ number_format($sampahItem->harga_per_kg, 0, ',', '.') }}</p>
-            <button class="card-button">Detail</button>
+            <div class="card-image">
+                <img src="/images/sampah/{{ $sampahItem->gambar }}" alt="{{ $sampahItem->jenis_sampah }}" style="width: 100%; height: auto; border-radius: 8px 8px 0 0;">
+            </div>
+            <div class="card-content">
+                <h3 class="card-title">{{ $sampahItem->jenis_sampah }}</h3>
+                <p class="card-price">Harga /Kg: <span style="color: #2e7d32; font-weight: bold;">Rp{{ number_format($sampahItem->harga_per_kg, 0, ',', '.') }}</span></p>
+            </div>
+            <div class="card-footer">
+                <button class="card-button" style="background-color: #4CAF50; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; transition: all 0.3s;">
+                    Detail
+                </button>
+            </div>
         </div>
         @endforeach
     </div>
 </section>
-
 </body>
 
 </html>

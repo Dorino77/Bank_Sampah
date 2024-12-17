@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Sampah</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
         /* Global Styles */
         body {
@@ -13,7 +14,7 @@
             font-family: 'Inter', sans-serif;
             box-sizing: border-box;
             color: #333;
-            background-color: #f9fafb;
+            background-color: #f4f4f4;
             background-image: url("../images/admin/background.png");
             background-size: cover;
             background-repeat: no-repeat;
@@ -25,81 +26,34 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 30px;
+            padding: 15px 30px;
             background: linear-gradient(135deg, #2e7d32, #66bb6a);
             color: white;
-            border-bottom: 2px solid #fff;
-        }
-
-        .logo-container {
-            display: flex;
-            align-items: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
         .logo {
-            width: 200px;
+            width: 180px;
             height: auto;
         }
 
         .profile-container {
             display: flex;
             align-items: center;
-            gap: 10px;
-        }
-
-        .profile-pic {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            border: 2px solid white;
-            object-fit: cover;
-        }
-
-        .profile-details {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .customer-name {
-            font-size: 22px;
-            font-weight: 600;
+            gap: 15px;
         }
 
         .customer-role {
-            font-size: 18px;
-            opacity: 0.8;
+            font-size: 1.2rem;
+            font-weight: 600;
         }
 
-        /* Navigation Menu */
-        .nav-menu {
-            background-color: #333;
-            padding: 10px 0;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .nav-menu ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-        }
-
-        .nav-menu li {
-            margin: 0 15px;
-        }
-
-        .nav-menu a {
-            text-decoration: none;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            transition: background 0.3s;
-        }
-
-        .nav-menu a:hover {
-            background-color: #ffbb00;
+        /* Heading */
+        .heading-title {
+            text-align: center;
+            margin: 30px 0;
+            font-size: 2.5rem;
+            font-weight: 700;
         }
 
         /* Edit Form */
@@ -107,16 +61,13 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-top: 50px;
-            padding: 40px;
-            background-color: white;
+            margin: 0 auto 50px auto;
+            padding: 30px;
+            background: white;
             border-radius: 15px;
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-            width: 50%;
-            max-width: 900px;
-            height: auto;
-            margin-left: auto;
-            margin-right: auto;
+            width: 90%;
+            max-width: 700px;
         }
 
         .edit-form {
@@ -124,7 +75,7 @@
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         .form-group label {
@@ -132,116 +83,77 @@
             margin-bottom: 8px;
             display: block;
             color: #555;
-            font-size: 16px;
+            font-size: 1rem;
         }
 
-        .form-group input,
-        .form-group textarea {
+        .form-group input {
             width: 100%;
             padding: 12px 16px;
             border: 1px solid #ddd;
             border-radius: 8px;
-            font-size: 16px;
-            transition: all 0.3s ease;
+            font-size: 1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .form-group input:focus,
-        .form-group textarea:focus {
+        .form-group input:focus {
             border-color: #66bb6a;
             outline: none;
-            box-shadow: 0 0 5px rgba(102, 187, 106, 0.5);
+            box-shadow: 0 0 8px rgba(102, 187, 106, 0.5);
         }
 
-        .form-group input[type="number"] {
-            -moz-appearance: textfield;
+        .btn-container {
+            display: flex;
+            gap: 15px;
         }
 
-        .form-group input[type="number"]::-webkit-outer-spin-button,
-        .form-group input[type="number"]::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-
-        .btn-save,
-        .btn-cancel {
-            padding: 14px 20px;
-            font-size: 16px;
+        .btn-save, .btn-cancel {
+            flex: 1;
+            padding: 12px;
+            font-size: 1rem;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             transition: transform 0.3s ease, background-color 0.3s ease;
-            margin-top: 20px;
         }
 
         .btn-save {
-            background-color: #66bb6a;
+            background-color: #2e7d32;
             color: white;
-            width: 100%;
         }
 
         .btn-save:hover {
-            background-color: #2e7d32;
+            background-color: #1b5e20;
             transform: scale(1.05);
         }
 
         .btn-cancel {
             background-color: #dc3545;
             color: white;
-            width: 100%;
-            margin-top: 10px;
         }
 
         .btn-cancel:hover {
-            background-color: #a71d2a;
+            background-color: #b71c1c;
             transform: scale(1.05);
         }
 
-        footer {
-            text-align: center;
-            padding: 20px;
-            background-color: #333;
-            color: white;
-        }
     </style>
 </head>
 
 <body>
-
     <!-- Header -->
     <header class="header">
         <a href="{{ route('home') }}">
             <img src="/images/logo1.png" alt="Logo Bank Sampah" class="logo">
         </a>
         <div class="profile-container">
-            <div class="profile-details">
-                <span class="customer-role">Administrator</span>
-            </div>
+            <span class="customer-role">Administrator</span>
         </div>
     </header>
 
-    <!-- Navbar -->
-    <nav class="nav-menu">
-        <ul>
-            <li><a href="{{ route('admin.index') }}">Dashboard</a></li>
-            <li><a href="{{ route('admin.pengambilan_sampah') }}">Req Pengambilan Sampah</a></li>
-            <li><a href="{{ route('admin.data_sampah') }}">Data Sampah</a></li>
-            <li><a href="{{ route('admin.beli_sampah') }}">Pembelian Sampah</a></li>
-            <li><a href="{{ route('admin.data_karya') }}">Data Hasil Karya</a></li>
-            <li><a href="{{ route('admin.transaksi_karya') }}">Pembelian Hasil Karya</a></li>
-            <li><a href="{{ route('admin.laporan') }}">Keuangan</a></li>
-            <li>
-                <form action="{{ route('logout') }}" method="POST" style="display: inline;">
-                    @csrf
-                    <button type="submit" style="background: none; border: none; color: white; cursor: pointer;">
-                        Logout
-                    </button>
-                </form>
-            </li>
-        </ul>
-    </nav>
+    <!-- Title -->
+    <h2 class="heading-title">Edit Data Sampah</h2>
 
-    <h2 style="text-align: center; margin-top: 50px; font-size: 2.5rem; font-weight: 600; color: #333;">Edit Sampah</h2>
-
+    <!-- Form Container -->
     <div class="edit-form-container">
         <form action="{{ route('admin.update_sampah', $sampah->id) }}" method="POST" class="edit-form">
             @csrf
@@ -249,19 +161,24 @@
 
             <div class="form-group">
                 <label for="jenis_sampah">Jenis Sampah</label>
-                <input type="text" name="jenis_sampah" id="jenis_sampah" class="form-control" value="{{ $sampah->jenis_sampah }}" readonly>
+                <input type="text" name="jenis_sampah" id="jenis_sampah" value="{{ $sampah->jenis_sampah }}" readonly>
             </div>
 
             <div class="form-group">
                 <label for="harga_per_kg">Harga per KG</label>
-                <input type="number" name="harga_per_kg" id="harga_per_kg" class="form-control" value="{{ $sampah->harga_per_kg }}" required>
+                <input type="number" name="harga_per_kg" id="harga_per_kg" value="{{ $sampah->harga_per_kg }}" required>
             </div>
 
-            <button type="submit" class="btn-save">Simpan Perubahan</button>
-            <button type="button" class="btn-cancel" onclick="window.location.href='{{ route('admin.data_sampah') }}'">Batal</button>
+            <div class="btn-container">
+                <button type="submit" class="btn-save">
+                    <i class="fas fa-save"></i> Simpan Perubahan
+                </button>
+                <button type="button" class="btn-cancel" onclick="window.location.href='{{ route('admin.data_sampah') }}'">
+                    <i class="fas fa-times"></i> Batal
+                </button>
+            </div>
         </form>
     </div>
-
 </body>
 
 </html>

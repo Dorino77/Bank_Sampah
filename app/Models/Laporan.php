@@ -16,7 +16,7 @@ class Laporan extends Model
     protected $fillable = [
         'total_sampah',
         'total_karya',
-        'totalUang',
+        // 'totalUang',
         'tanggal',
     ];
 

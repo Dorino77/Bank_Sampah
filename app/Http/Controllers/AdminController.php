@@ -6,12 +6,14 @@ use App\Models\Poin;
 use App\Models\User;
 use App\Models\Sampah;
 use App\Models\Laporan;
+use App\Models\Tabungan;
 use App\Models\HasilKarya;
 use Illuminate\Http\Request;
 use App\Models\TransaksiSampah;
 use App\Models\TransaksiPembelian;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Models\HistoryTransaksiSampah;
 use App\Models\RequestPenjualanSampah;
 
 class AdminController extends Controller
@@ -76,32 +78,37 @@ class AdminController extends Controller
     }
 
     public function riwayatTransaksiSampah(Request $request)
-    {
-        $transaksi_sampah = DB::table('transaksi_sampah')
-        ->join('sampah', 'transaksi_sampah.sampah_id', '=', 'sampah.id')
-        ->join('users', 'transaksi_sampah.user_id', '=', 'users.id')
+{
+    // Query untuk mengambil data dari tabel history_transaksi
+    $transaksi_sampah = DB::table('history_transaksi')
+        ->join('sampah', 'history_transaksi.sampah_id', '=', 'sampah.id')
+        ->join('users', 'history_transaksi.user_id', '=', 'users.id')
         ->select(
-            'transaksi_sampah.id as transaksi_id',
+            'history_transaksi.id as transaksi_id',
             'users.name as user_name', // Ambil nama user dari tabel users
-            'users.alamat as user_alamat', // Ambil nama user dari tabel users
-            'users.telepon as user_telepon', // Ambil nama user dari tabel users
+            'users.alamat as user_alamat', // Ambil alamat user
+            'users.telepon as user_telepon', // Ambil telepon user
             'sampah.jenis_sampah as jenis_sampah',
-            'transaksi_sampah.berat',
-            'transaksi_sampah.harga_total',
-            'transaksi_sampah.created_at'
+            'history_transaksi.berat',
+            'history_transaksi.harga_total',
+            'history_transaksi.created_at'
         );
 
-        
-        if ($request->has('tanggal') && $request->tanggal) {
-            $transaksi_sampah->whereDate('transaksi_sampah.created_at', '=', $request->tanggal);
-        }
-    
-        // Execute the query and get the results
-        $transaksi_sampah = $transaksi_sampah->get();
-    
-        // Return the view with the transaksi_sampah data
-        return view('admin.riwayat_sampah', compact('transaksi_sampah'));
+    // Filter berdasarkan tanggal jika ada input
+    if ($request->has('tanggal') && !empty($request->tanggal)) {
+        $request->validate([
+            'tanggal' => 'date', // Validasi input tanggal
+        ]);
+        $transaksi_sampah->whereDate('history_transaksi.created_at', $request->tanggal);
     }
+
+    // Eksekusi query dan ambil hasilnya
+    $transaksi_sampah = $transaksi_sampah->get();
+
+    // Return ke view dengan data transaksi_sampah
+    return view('admin.riwayat_sampah', compact('transaksi_sampah'));
+}
+
 
     public function formTambahKarya ()
     {
@@ -248,14 +255,14 @@ public function transaksiSampahStore(Request $request)
         if (!$sampah) {
             continue; // Skip if the Sampah is invalid
         }
-    
-        $berat = $request->berat[$key]; // Get the weight based on the same index
+
+        $berat = $request->berat[$key];
         $hargaTotal = $berat * $sampah->harga_per_kg;
-        $poin = floor($hargaTotal / 1000); // Points calculation
-    
+        $poin = floor($hargaTotal / 1000);
+
         $totalHarga += $hargaTotal;
         $totalPoin += $poin;
-    
+
         // Save the trash transaction
         $transaksiSampah = TransaksiSampah::create([
             'user_id' => $user->id,
@@ -263,35 +270,47 @@ public function transaksiSampahStore(Request $request)
             'berat' => $berat,
             'harga_total' => $hargaTotal,
         ]);
-    
+
         // Save the points
         Poin::create([
             'idTransaksiSampah' => $transaksiSampah->id,
             'idUser' => $user->id,
             'jumlahPoin' => $poin,
         ]);
-        
+
+         // Simpan data transaksi ke tabel riwayat_transaksi
+         DB::table('history_transaksi')->insert([
+            'user_id' => $user->id,
+            'sampah_id' => $sampah->id,
+            'berat' => $berat,
+            'harga_total' => $hargaTotal,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
         // Update the user's total points
         $this->updateUserTotalPoin($user->id);
     }
 
     $transaksi_sampah = DB::table('transaksi_sampah')
-    ->join('sampah', 'transaksi_sampah.sampah_id', '=', 'sampah.id')
-    ->join('users', 'transaksi_sampah.user_id', '=', 'users.id')
-    ->select(
-        'transaksi_sampah.id as transaksi_id',
-        'users.name as user_name',
-        'users.alamat as user_alamat',
-        'users.telepon as user_telepon',
-        'sampah.jenis_sampah as jenis_sampah',
-        'transaksi_sampah.berat',
-        'transaksi_sampah.harga_total',
-        'transaksi_sampah.created_at'
-    )
-    ->get();
+        ->join('sampah', 'transaksi_sampah.sampah_id', '=', 'sampah.id')
+        ->join('users', 'transaksi_sampah.user_id', '=', 'users.id')
+        ->select(
+            'transaksi_sampah.id as transaksi_id',
+            'users.name as user_name',
+            'users.alamat as user_alamat',
+            'users.telepon as user_telepon',
+            'sampah.jenis_sampah as jenis_sampah',
+            'transaksi_sampah.berat',
+            'transaksi_sampah.harga_total',
+            'transaksi_sampah.created_at'
+        )
+        ->get();
 
-return view('admin.beli_sampah', compact('transaksi_sampah', 'totalHarga', 'totalPoin'));
+    return view('admin.beli_sampah', compact('transaksi_sampah', 'totalHarga', 'totalPoin'));
 }
+
+
 
 
 
@@ -350,32 +369,111 @@ public function updateUserTotalPoin($idUser)
 
 
 
-    public function laporan()
-    {
-        // Total harga pembelian sampah
-        $totalHargaSampah = TransaksiSampah::sum('harga_total');
+public function laporan()
+{
+    // Hitung total histori harga pembelian sampah
+    $totalHistorySampah = HistoryTransaksiSampah::sum('harga_total');
+    // Hitung total harga pembelian sampah
+    $totalHargaSampah = TransaksiSampah::sum('harga_total');
 
-        // Total harga pembelian hasil karya
-        $totalHargaKarya = TransaksiPembelian::sum('total_harga');
+    // Hitung total harga pembelian hasil karya
+    $totalHargaKarya = TransaksiPembelian::sum('total_harga');
 
-        // Hitung hasil pengurangan
+    // Hitung hasil pengurangan
     $hasilPengurangan = $totalHargaKarya - $totalHargaSampah;
 
-    // Simpan hasil pengurangan ke tabel laporan
-    $laporan = new Laporan(); 
-    $laporan->total_sampah = $totalHargaSampah;
-    $laporan->total_karya = $totalHargaKarya;
-    $laporan->totalUang = $hasilPengurangan;
-    $laporan->tanggal = now(); // Jika ingin menyimpan tanggal saat ini
-    $laporan->save();
+    // Periksa apakah laporan dengan tanggal saat ini sudah ada
+    $laporan = Laporan::whereDate('tanggal', now()->toDateString())->first();
+
+    if ($laporan) {
+        // Jika laporan sudah ada, cek apakah ada perubahan
+        if ($laporan->total_sampah != $totalHargaSampah || $laporan->total_karya != $totalHargaKarya) {
+            // Jika ada perubahan, buat laporan baru
+            $laporanBaru = new Laporan();
+            $laporanBaru->total_sampah = $totalHargaSampah;
+            $laporanBaru->total_karya = $totalHargaKarya;
+            $laporanBaru->tanggal = now(); // Menyimpan tanggal saat ini
+            $laporanBaru->save();
+        }
+    } else {
+        // Jika laporan belum ada, buat laporan baru
+        $laporan = new Laporan(); 
+        $laporan->total_sampah = $totalHargaSampah;
+        $laporan->total_karya = $totalHargaKarya;
+        $laporan->tanggal = now(); // Menyimpan tanggal saat ini
+        $laporan->save();
+    }
+
+    // Ambil saldo terakhir dari tabel tabungan
+    $tabungan = Tabungan::latest()->first();
+
+    if ($tabungan) {
+        // Perbarui saldo dengan hasilPengurangan jika ada perubahan
+        $tabungan->totalUang = $hasilPengurangan;
+        $tabungan->save();
+    } else {
+        // Jika belum ada data tabungan, buat data tabungan baru
+        Tabungan::create([
+            'totalUang' => $hasilPengurangan,
+        ]);
+    }
 
     // Kirimkan data ke view
     return view('admin.laporan', [
+        'totalHistorySampah' => $totalHistorySampah,
         'totalHargaSampah' => $totalHargaSampah,
         'totalHargaKarya' => $totalHargaKarya,
-        'hasilPengurangan' => $hasilPengurangan
+        'hasilPengurangan' => $hasilPengurangan,
+        'saldo' => $tabungan ? $tabungan->totalUang : 0, // Kirimkan saldo ke view
     ]);
-    }
+}
+
+
+
+
+
+// public function showTabungan()
+// {
+//     // Ambil total uang dari tabel 'tabungan'
+//     $tabungan = Tabungan::latest()->first(); // Ambil baris terbaru
+//     $totalUang = $tabungan ? $tabungan->totalUang : 0; // Jika tidak ada, set 0
+
+//     return view('admin.tabungan', compact('totalUang'));
+// }
+
+// public function tambahTabungan(Request $request)
+// {
+//     $request->validate([
+//         'jumlah' => 'required|numeric|min:1',
+//     ]);
+
+//     $jumlah = $request->input('jumlah');
+
+//     // Menambahkan jumlah ke total uang
+//     Tabungan::tambahTotalUang($jumlah);
+
+//     return redirect()->route('admin.tabungan')->with('success', 'Tabungan berhasil ditambahkan.');
+// }
+
+// public function kurangiTabungan(Request $request)
+// {
+//     $request->validate([
+//         'jumlah' => 'required|numeric|min:1',
+//     ]);
+
+//     $jumlah = $request->input('jumlah');
+
+//     // Mengurangi jumlah dari total uang
+//     $success = Tabungan::kurangiTotalUang($jumlah);
+
+//     if ($success) {
+//         return redirect()->route('admin.tabungan')->with('success', 'Tabungan berhasil dikurangi.');
+//     } else {
+//         return redirect()->route('admin.tabungan')->with('error', 'Jumlah pengurangan melebihi saldo tabungan.');
+//     }
+// }
+
+
     
 
     public function data_sampah()
@@ -470,6 +568,67 @@ public function updateUserTotalPoin($idUser)
         // Redirect ke halaman data sampah dengan pesan sukses
         return redirect()->route('admin.data_sampah')->with('success', 'Data Sampah Berhasil Dihapus');
     }
+
+
+
+    public function indexPencairanPoin()
+    {
+        // Join tabel 'poin' dengan 'users' untuk mengambil 'name'
+        $users = Poin::join('users', 'poin.idUser', '=', 'users.id')
+                     ->select('poin.idUser', 'users.name', DB::raw('SUM(poin.jumlahPoin) as totalPoin'))
+                     ->groupBy('poin.idUser', 'users.name')
+                     ->get();
+
+        return view('admin.pencairan-poin', compact('users'));
+    }
+
+public function pencairanPoin(Request $request)
+{
+    $request->validate([
+        'idUser' => 'required|exists:poin,idUser',
+        'jumlahPoin' => 'required|integer|min:1',
+    ]);
+
+    // Logika pengurangan poin
+    $userPoin = Poin::where('idUser', $request->idUser)->get();
+    $poinToReduce = $request->jumlahPoin;
+
+    $hargaToReduce = $poinToReduce * 1000; // Hitung harga total yang akan dikurangi
+
+    foreach ($userPoin as $poin) {
+        if ($poinToReduce <= 0) break;
+
+        if ($poin->jumlahPoin > $poinToReduce) {
+            $poin->jumlahPoin -= $poinToReduce;
+            $poin->save();
+            $poinToReduce = 0;
+        } else {
+            $poinToReduce -= $poin->jumlahPoin;
+            $poin->delete();
+        }
+    }
+
+    // Logika pengurangan harga_total di tabel transaksi_sampah
+    $transaksiSampah = TransaksiSampah::where('user_id', $request->idUser)->orderBy('created_at', 'asc')->get();
+
+    foreach ($transaksiSampah as $transaksi) {
+        if ($hargaToReduce <= 0) break;
+
+        if ($transaksi->harga_total > $hargaToReduce) {
+            $transaksi->harga_total -= $hargaToReduce;
+            $transaksi->save();
+            break;
+        } else {
+            $hargaToReduce -= $transaksi->harga_total;
+            $transaksi->delete();
+        }
+    }
+
+    return redirect()->back()->with('success', 'Poin dan Harga Total Berhasil Dikurangkan!');
+}
+
+
+
 
 
 

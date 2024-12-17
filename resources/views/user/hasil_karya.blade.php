@@ -439,7 +439,7 @@
                         nama: nama,
                         alamat: alamat,
                         nomorHp: nomorHp,
-                        tanggal: tanggal
+                        tanggal: tanggal,
                     })
                 });
 

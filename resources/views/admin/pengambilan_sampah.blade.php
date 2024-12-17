@@ -237,12 +237,12 @@
             <li><a href="{{ route('admin.data_sampah') }}">Data Sampah</a></li>
             <li><a href="{{ route('admin.beli_sampah') }}">Pembelian Sampah</a></li>
             <li><a href="{{ route('admin.data_karya') }}">Data Hasil Karya</a></li>
-            {{-- <li><a href="{{ route('admin.transaksi_karya') }}">Pembelian Hasil Karya</a></li> --}}
+            <li><a href="{{ route('admin.pencairan-poin') }}">Pencairan Poin</a></li>
             <li><a href="{{ route('admin.laporan') }}">Keuangan</a></li>
             <li>
                 <form action="{{ route('logout') }}" method="POST" style="display: inline;">
                     @csrf
-                    <button type="submit" style="background: none; border: none; color: white; cursor: pointer;">
+                    <button type="submit" style="background: none; border: none; color: rgb(255, 25, 25); cursor: pointer; font-size: 16px; font-weight: bold;">
                         Logout
                     </button>
                 </form>

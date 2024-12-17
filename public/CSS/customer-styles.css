@@ -191,17 +191,20 @@ body {
     z-index: 11;
 }
 .container {
+    margin-top: 50px; /* Jarak antara carousel dan container */
     padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    margin: 20px auto;
+    background-color: #ffffff; /* Warna putih agar konten kontras */
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 90%;
     max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .header-title {
     font-size: 28px;
-    color: #333;
+    color: #2e7d32;
     text-align: center;
     margin-bottom: 20px;
 }
@@ -214,14 +217,14 @@ body {
 }
 
 .card {
-    background-color: #fff;
+    background-color: #f9f9f9;
     border: 1px solid #ddd;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 20px;
     width: 250px;
     text-align: center;
-    transition: transform 0.3s, box-shadow 0.3s;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .card:hover {
@@ -240,4 +243,18 @@ body {
     font-size: 16px;
     color: #555;
     margin-bottom: 15px;
+}
+
+.card-button {
+    background-color: #66bb6a;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.card-button:hover {
+    background-color: #2e7d32;
 }

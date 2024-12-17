@@ -24,7 +24,8 @@ class CustomerController extends Controller
 {
     $loggedInUser = Auth::user();
 
-    $totalPoin = PencairanPoin::where('idUser', $loggedInUser->id)->sum('jumlah_poin');
+    $totalPoin = Poin::where('idUser', $loggedInUser->id)->sum('jumlahPoin');
+
 
     $sampah = Sampah::all();
 
@@ -42,7 +43,7 @@ class CustomerController extends Controller
     public function jualSampah()
     {
         $loggedInUser = Auth::user(); // Ambil data pengguna yang login
-        $totalPoin = PencairanPoin::where('idUser', $loggedInUser->id)->sum('jumlah_poin');
+        $totalPoin = Poin::where('idUser', $loggedInUser->id)->sum('jumlahPoin');
         return view('user.jual_sampah', [
             'loggedInUser' => $loggedInUser,
             'totalPoin' => $totalPoin
@@ -81,7 +82,7 @@ class CustomerController extends Controller
     public function hasilKarya()
     {
         $loggedInUser = Auth::user(); // Ambil data pengguna yang login
-        $totalPoin = PencairanPoin::where('idUser', $loggedInUser->id)->sum('jumlah_poin');
+        $totalPoin = Poin::where('idUser', $loggedInUser->id)->sum('jumlahPoin');
         $karyaList = HasilKarya::all(); // Ambil semua data hasil karya
         return view('user.hasil_karya', [
             'karyaList' => $karyaList,

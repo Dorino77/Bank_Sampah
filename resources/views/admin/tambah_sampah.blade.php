@@ -168,7 +168,7 @@
     </header>
 
     <!-- Navigation -->
-    <nav class="nav-menu">
+    {{-- <nav class="nav-menu">
         <ul>
             <li><a href="{{ route('admin.index') }}">Dashboard</a></li>
             <li><a href="{{ route('admin.pengambilan_sampah') }}">Req Pengambilan Sampah</a></li>
@@ -186,7 +186,7 @@
                 </form>
             </li>
         </ul>
-    </nav>
+    </nav> --}}
 
     <!-- Form Container -->
     <div class="form-container">
